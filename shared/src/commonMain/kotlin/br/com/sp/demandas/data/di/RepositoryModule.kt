@@ -15,12 +15,12 @@ import br.com.sp.demandas.domain.user.IUserRepository
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    factory<IAuthRepository> { AuthRepository(get(), get()) }
+    factory<IAuthRepository> { AuthRepository(get(), get(), get(), get()) }
     factory<IDemandaRepository> { DemandaRepository(get()) }
     factory { UserSettings(get()) }
     factory<IUserRepository> { UserRepository(get()) }
     factory { AuthCredentials(get()) }
 
     factory<IFiltroDemandaRepository> { FiltroDemandaRepository(get(), get(), get(), get(),get()) }
-    factory<IMensagemRepository> { MensagemRepository(get())}
+    factory<IMensagemRepository> { MensagemRepository(get(), get())}
 }

@@ -51,6 +51,8 @@ import br.com.sp.demandas.MR
 import br.com.sp.demandas.core.ClientException
 import br.com.sp.demandas.core.ServerException
 import br.com.sp.demandas.core.UnknownException
+import br.com.sp.demandas.core.app.subtitle
+import br.com.sp.demandas.core.app.title
 import br.com.sp.demandas.core.ui.getScreenModel
 import br.com.sp.demandas.design.components.CustomDialog
 import br.com.sp.demandas.design.components.MaxTopAppBarCenter
@@ -202,7 +204,7 @@ class LoginScreen : Screen {
                         Modifier.fillMaxWidth().background(Color.LightGray).padding(vertical = 12.dp)
                     ) {
                         androidx.compose.material3.Text(
-                            text = "SGRI - SECRETARIA DE GOVERNO E RELACIONAMENTO INSTITUCIONAL",
+                            text = title,
                             textAlign = TextAlign.Center,
                             color = Color.Black,
                             modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
@@ -212,7 +214,7 @@ class LoginScreen : Screen {
                             ),
                         )
                         androidx.compose.material3.Text(
-                            text = "SUBSECRETARIA DE CONVÊNIOS COM MUNICÍPIOS E ENTIDADES NÃO GOVERNAMENTAIS",
+                            text = subtitle,
                             textAlign = TextAlign.Center,
                             color = Color.Black,
                             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
@@ -237,9 +239,9 @@ class LoginScreen : Screen {
                 //LoginTitleAndSubTitle()
                 LoginField(viewModel)
                 Spacer(Modifier.height(20.dp))
-                LoginTextButton {
+                /*LoginTextButton {
                     navigator.push(ForgotPasswordUI())
-                }
+                }*/
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

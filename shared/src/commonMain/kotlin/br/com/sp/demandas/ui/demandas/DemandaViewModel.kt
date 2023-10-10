@@ -146,7 +146,7 @@ class DemandaViewModel(
                 newState = if (event.numero == "")
                     newState.copy(
                         filtroInput = newState.filtroInput?.copy(numeroDemanda = null),
-                        filtroState = newState.filtroState?.copy(etapaFiltro = "")
+                        filtroState = newState.filtroState?.copy(numeroDemandaFiltro = "")
                     )
                 else
                     newState.copy(
@@ -186,10 +186,10 @@ class DemandaViewModel(
                 var newState = (uiState.value.state as ResourceUiState.Success).data
                 newState = newState.copy(
                     filtroInput = newState.filtroInput?.copy(
-                        alarme = event.list.contains("Alarme"),
-                        aviso = event.list.contains("Aviso"),
-                        alerta = event.list.contains("Alertas"),
-                        noPrazo = event.list.contains("No prazo")
+                        alarme = event.list.contains("Prazo vencido (alerta e alarme)"),
+                        aviso = event.list.contains("No prazo (Avisos)"),
+                        alerta = event.list.contains("Prazo vencido (alerta e alarme)"),
+                        noPrazo = event.list.contains("No prazo (Avisos)")
 
                     ),
                     filtroState = newState.filtroState?.copy(filtroSelect = event.list)

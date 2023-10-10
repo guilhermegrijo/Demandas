@@ -34,15 +34,13 @@ val networkModule = module {
                 )
             }
             defaultRequest {
-                url("https://convenioapi.azurewebsites.net/api")
+                url("https://convenioapi-hml.azurewebsites.net/api")
             }
             install(Logging) {
                 logger = Logger.DEFAULT
                 level = LogLevel.HEADERS
                 sanitizeHeader { header -> header == HttpHeaders.Authorization }
             }
-
         }
-
     }
 }

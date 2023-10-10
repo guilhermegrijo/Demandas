@@ -65,7 +65,6 @@ kotlin {
                 implementation("dev.icerock.moko:biometry:0.4.0")
                 implementation("dev.icerock.moko:biometry-compose:0.4.0")
                 implementation("io.fluidsonic.currency:fluid-currency:0.13.0")
-                implementation("com.github.Breens-Mbaka:Searchable-Dropdown-Menu-Jetpack-Compose:0.3.4")
 
 
             }
@@ -82,6 +81,8 @@ kotlin {
             dependencies {
                 implementation("io.ktor:ktor-client-android:2.3.1")
                 implementation("io.insert-koin:koin-android:3.4.3")
+                implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
+                implementation("com.google.firebase:firebase-messaging-ktx")
             }
         }
         val androidUnitTest by getting

@@ -4,16 +4,20 @@ import br.com.sp.demandas.data.auth.local.AuthCredentials
 import br.com.sp.demandas.core.ApiResponse
 import br.com.sp.demandas.core.ClientException
 import br.com.sp.demandas.core.ServerException
+import br.com.sp.demandas.core.app.FcmToken
 import br.com.sp.demandas.data.auth.mapping.toUser
 import br.com.sp.demandas.domain.auth.model.LoginModel
 import br.com.sp.demandas.data.auth.remote.LoginRemoteSource
 import br.com.sp.demandas.domain.auth.IAuthRepository
 import br.com.sp.demandas.domain.auth.model.RefreshTokenModel
+import br.com.sp.demandas.domain.mensagem.IMensagemRepository
 import br.com.sp.demandas.domain.user.User
 
 internal class AuthRepository(
     private val remoteSource: LoginRemoteSource,
-    private val authCredentials: AuthCredentials
+    private val authCredentials: AuthCredentials,
+    private val fcmToken: FcmToken,
+    private val mensagemRepository: IMensagemRepository
 ) : IAuthRepository {
     override suspend fun doLogin(loginModel: LoginModel): User {
         val result = remoteSource.doLogin(loginModel)
@@ -23,7 +27,7 @@ internal class AuthRepository(
             }
 
             is ApiResponse.Error.HttpError -> {
-                throw ServerException("${result.errorMessage}")
+                throw ServerException("${result.errorBody}")
             }
 
             is ApiResponse.Error.SerializationError -> {
@@ -33,7 +37,9 @@ internal class AuthRepository(
             is ApiResponse.Success -> {
                 result.body.apply {
                     authCredentials.setCredentials(token, refreshToken)
+                    mensagemRepository.enviarToken(fcmToken.getToken())
                 }
+
                 return result.body.toUser()
 
             }
@@ -94,7 +100,7 @@ internal class AuthRepository(
             }
 
             is ApiResponse.Error.HttpError -> {
-                throw ServerException("${result.errorMessage}")
+                throw ServerException("${result.errorBody}")
             }
 
             is ApiResponse.Error.SerializationError -> {

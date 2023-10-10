@@ -21,6 +21,7 @@ internal class DemandaRepository(private val demandaRemoteSource: DemandaRemoteS
         aviso: Boolean?,
         alerta: Boolean?,
         alarme: Boolean?,
+        noPrazo: Boolean?,
         numeroDemanda: String?
     ): List<Demanda> {
         val result = demandaRemoteSource.getDemandas(
@@ -32,6 +33,7 @@ internal class DemandaRepository(private val demandaRemoteSource: DemandaRemoteS
             aviso,
             alerta,
             alarme,
+            noPrazo,
             numeroDemanda
         )
         when (result) {

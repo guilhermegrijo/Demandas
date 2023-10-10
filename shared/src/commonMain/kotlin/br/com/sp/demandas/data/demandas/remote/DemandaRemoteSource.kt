@@ -28,6 +28,7 @@ class DemandaRemoteSource(
         aviso: Boolean?,
         alerta: Boolean?,
         alarme: Boolean?,
+        noPrazo: Boolean?,
         numeroDemanda: String?
     ): ApiResponse<List<DemandaResponse>, ErrorResponse> =
         httpClient.safeRequest {
@@ -47,14 +48,17 @@ class DemandaRemoteSource(
                 if (idAtividadeStatus != null) {
                     parameters.append("idAtividadeStatus", idAtividadeStatus)
                 }
-                if (aviso != null) {
+                if (aviso == true) {
                     parameter("aviso", aviso)
                 }
-                if (alerta != null) {
-                    parameter("alerta", aviso)
+                if (alerta == true) {
+                    parameter("alerta", alerta)
                 }
-                if (alarme != null) {
-                    parameter("alarme", aviso)
+                if (alarme == true) {
+                    parameter("alarme", alarme)
+                }
+                if (noPrazo == true) {
+                    parameter("noPrazo", noPrazo)
                 }
                 if (numeroDemanda != null) {
                     parameter("numeroDemanda", numeroDemanda)

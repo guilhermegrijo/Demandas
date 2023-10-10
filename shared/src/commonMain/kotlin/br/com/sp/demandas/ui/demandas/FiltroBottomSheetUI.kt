@@ -58,6 +58,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import br.com.sp.demandas.MR
+import br.com.sp.demandas.core.app.subtitle
+import br.com.sp.demandas.core.app.title
 import br.com.sp.demandas.core.ui.ResourceUiState
 import br.com.sp.demandas.design.components.Accordion
 import br.com.sp.demandas.design.components.AutoComplete
@@ -156,7 +158,7 @@ fun FilterBottomSheet(
                                 .padding(vertical = 12.dp)
                         ) {
                             androidx.compose.material3.Text(
-                                text = "SGRI - SECRETARIA DE GOVERNO E RELACIONAMENTO INSTITUCIONAL",
+                                text = title,
                                 textAlign = TextAlign.Center,
                                 color = Color.Black,
                                 modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
@@ -166,7 +168,7 @@ fun FilterBottomSheet(
                                 ),
                             )
                             androidx.compose.material3.Text(
-                                text = "SUBSECRETARIA DE CONVÊNIOS COM MUNICÍPIOS E ENTIDADES NÃO GOVERNAMENTAIS",
+                                text = subtitle,
                                 textAlign = TextAlign.Center,
                                 color = Color.Black,
                                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
@@ -193,56 +195,11 @@ fun FilterBottomSheet(
                     }
 
                     else -> {
+
+
                         var numeroDemanda by rememberSaveable {
                             mutableStateOf(uiState.filtroState.numeroDemandaFiltro ?: "")
                         }
-                        Column(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
-                                .fillMaxWidth()
-                        ) {
-
-                            androidx.compose.material3.Text(
-                                modifier = Modifier.padding(start = 3.dp, bottom = 2.dp),
-                                text = "Número da Demanda",
-                                fontSize = 16.sp,
-                            )
-
-                            Column(modifier = Modifier.fillMaxWidth()) {
-
-                                Row(modifier = Modifier.fillMaxWidth()) {
-                                    OutlinedTextField(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(55.dp),
-                                        value = numeroDemanda,
-                                        onValueChange = {
-                                            numeroDemanda = it
-                                            viewModel.handleEvent(
-                                                DemandaScreenContract.Event.FiltroNumeroDemanda(
-                                                    it
-                                                )
-                                            )
-                                        },
-                                        colors = TextFieldDefaults.colors(
-                                            focusedContainerColor = Color.Transparent,
-                                            unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                                            disabledContainerColor = MaterialTheme.colorScheme.background,
-                                        ),
-                                        keyboardOptions = KeyboardOptions(
-                                            keyboardType = KeyboardType.Text,
-                                            imeAction = ImeAction.Done
-                                        ),
-                                        shape = RoundedCornerShape(8.dp),
-                                        singleLine = true,
-                                    )
-                                }
-                            }
-                        }
-
-
-
-
 
                         if ((uiState.state as ResourceUiState.Success).data.tipoAcesso == TipoAcesso.TOTAL)
                             AutoComplete(
@@ -347,6 +304,49 @@ fun FilterBottomSheet(
                                     }
                                 }
                             }
+                            Column(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                                    .fillMaxWidth()
+                            ) {
+
+                                androidx.compose.material3.Text(
+                                    modifier = Modifier.padding(start = 3.dp, bottom = 2.dp),
+                                    text = "Número da Demanda",
+                                    fontSize = 16.sp,
+                                )
+
+                                Column(modifier = Modifier.fillMaxWidth()) {
+
+                                    Row(modifier = Modifier.fillMaxWidth()) {
+                                        OutlinedTextField(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(55.dp),
+                                            value = numeroDemanda,
+                                            onValueChange = {
+                                                numeroDemanda = it
+                                                viewModel.handleEvent(
+                                                    DemandaScreenContract.Event.FiltroNumeroDemanda(
+                                                        it
+                                                    )
+                                                )
+                                            },
+                                            colors = TextFieldDefaults.colors(
+                                                focusedContainerColor = Color.Transparent,
+                                                unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                                                disabledContainerColor = MaterialTheme.colorScheme.background,
+                                            ),
+                                            keyboardOptions = KeyboardOptions(
+                                                keyboardType = KeyboardType.Text,
+                                                imeAction = ImeAction.Done
+                                            ),
+                                            shape = RoundedCornerShape(8.dp),
+                                            singleLine = true,
+                                        )
+                                    }
+                                }
+                            }
 
                             AutoComplete(
                                 titulo = "Etapa",
@@ -356,7 +356,7 @@ fun FilterBottomSheet(
                                 viewModel.handleEvent(DemandaScreenContract.Event.FiltroEtapa(it))
                             }
 
-                            AutoComplete(
+                            /*AutoComplete(
                                 titulo = "Situação",
                                 filtro = uiState.filtroState.statusFiltro ?: "",
                                 uiState.filtroState.comboStatus,
@@ -369,12 +369,12 @@ fun FilterBottomSheet(
                                 uiState.filtroState.comboConvenio,
                             ) {
                                 viewModel.handleEvent(DemandaScreenContract.Event.FiltroConvenio(it))
-                            }
+                            }*/
                             var selectedIndexes by remember {
                                 mutableStateOf(uiState.filtroState.filtroSelect)
                             }
 
-                            val itemsList = listOf("Aviso", "Alerta", "Aviso", "No prazo")
+                            val itemsList = listOf("No prazo (Avisos)", "Prazo vencido (alerta e alarme)")
 
                             SegmentButton(
                                 modifier = Modifier.padding(all = 16.dp).fillMaxWidth(),

@@ -7,6 +7,8 @@ plugins {
     kotlin("multiplatform").version("1.8.21").apply(false)
     id("dev.icerock.mobile.multiplatform-resources").version("0.22.2").apply(false)
     kotlin("plugin.serialization").version("1.9.0").apply(false)
+    id("com.google.gms.google-services").version("4.3.15").apply(false)
+
 
 }
 

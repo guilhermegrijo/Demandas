@@ -515,89 +515,111 @@ class DemandasUI : Screen {
                                             )
 
 
-                                            Row(
-                                                modifier = Modifier.fillMaxWidth()
-                                                    .padding(vertical = 8.dp).height(48.dp),
-                                                horizontalArrangement = Arrangement.SpaceEvenly,
-                                                verticalAlignment = Alignment.CenterVertically
-                                            ) {
+                                            androidx.compose.material3.Text(
+                                                text = buildAnnotatedString {
+                                                    withStyle(
+                                                        style = SpanStyle(
+                                                            color = MaterialTheme.colorScheme.onBackground,
+                                                            fontWeight = FontWeight.SemiBold
+                                                        )
+                                                    ) {
+                                                        append("Portfólio: ")
+                                                    }
+
+                                                    append(it.portfolio)
+
+                                                },
+                                                textAlign = TextAlign.Start,
+                                                style = MaterialTheme.typography.bodyMedium.copy(
+                                                    color = MaterialTheme.colorScheme.onBackground,
+                                                    fontWeight = FontWeight.Normal
+                                                ),
+                                            )
+                                            androidx.compose.material3.Text(
+                                                text = it.tipoAlerta,
+                                                textAlign = TextAlign.Start,
+                                                style = MaterialTheme.typography.bodyMedium.copy(
+                                                    color = MaterialTheme.colorScheme.onBackground,
+                                                    fontWeight = FontWeight.Normal
+                                                ),
+                                            )
+
+
+                                            /*Column {
                                                 androidx.compose.material3.Text(
-                                                    text = "Aviso:",
-                                                    textAlign = TextAlign.Start,
-                                                    modifier = Modifier.padding(end = 5.dp),
+                                                    text = "Prazos (Dias)",
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    textAlign = TextAlign.Center,
                                                     style = MaterialTheme.typography.bodyMedium.copy(
                                                         color = MaterialTheme.colorScheme.onBackground,
-                                                        fontWeight = FontWeight.Bold
+                                                        fontWeight = FontWeight.Normal
                                                     ),
                                                 )
+                                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                                                    androidx.compose.material3.Text(
+                                                        text = buildAnnotatedString {
+                                                            withStyle(
+                                                                style = SpanStyle(
+                                                                    color = MaterialTheme.colorScheme.onBackground,
+                                                                    fontWeight = FontWeight.SemiBold
+                                                                )
+                                                            ) {
+                                                                append("Previsto: ")
+                                                            }
+                                                            append(it.prazoPrevisto)
 
-                                                Text(
-                                                    text = it.aviso,
-                                                    textAlign = TextAlign.Center,
-                                                    color = Color.White,
-                                                    modifier = Modifier
-                                                        .background(
-                                                            Color(0xFFF8D355),
-                                                            shape = CircleShape
-                                                        )
-                                                        .circleLayout()
-                                                        .padding(8.dp)
-                                                )
+                                                        },
+                                                        textAlign = TextAlign.Start,
+                                                        modifier = Modifier,
+                                                        style = MaterialTheme.typography.titleSmall.copy(
+                                                            color = MaterialTheme.colorScheme.onBackground
+                                                        ),
+                                                    )
+                                                    androidx.compose.material3.Text(
+                                                        text = buildAnnotatedString {
+                                                            withStyle(
+                                                                style = SpanStyle(
+                                                                    color = MaterialTheme.colorScheme.onBackground,
+                                                                    fontWeight = FontWeight.SemiBold
+                                                                )
+                                                            ) {
+                                                                append(" Realizado: ")
+                                                            }
+                                                            append(it.prazoRealizado)
 
-                                                androidx.compose.material3.Text(
-                                                    text = "Alertas:",
-                                                    textAlign = TextAlign.Start,
-                                                    modifier = Modifier.padding(end = 5.dp),
-                                                    style = MaterialTheme.typography.bodyMedium.copy(
-                                                        color = MaterialTheme.colorScheme.onBackground,
-                                                        fontWeight = FontWeight.Bold
-                                                    ),
-                                                )
+                                                        },
+                                                        textAlign = TextAlign.Start,
+                                                        modifier = Modifier,
+                                                        style = MaterialTheme.typography.titleSmall.copy(
+                                                            color = MaterialTheme.colorScheme.onBackground
+                                                        ),
+                                                    )
+                                                    androidx.compose.material3.Text(
+                                                        text = buildAnnotatedString {
+                                                            withStyle(
+                                                                style = SpanStyle(
+                                                                    color = MaterialTheme.colorScheme.onBackground,
+                                                                    fontWeight = FontWeight.SemiBold
+                                                                )
+                                                            ) {
+                                                                append(" Restante: ")
+                                                            }
+                                                            append(it.prazoRestante)
+
+                                                        },
+                                                        textAlign = TextAlign.Start,
+                                                        modifier = Modifier,
+                                                        style = MaterialTheme.typography.titleSmall.copy(
+                                                            color = MaterialTheme.colorScheme.onBackground
+                                                        ),
+                                                    )
+                                                }
+                                            }*/
 
 
-                                                Text(
-                                                    text = it.alerta,
-                                                    textAlign = TextAlign.Center,
-                                                    color = Color.White,
-                                                    modifier = Modifier
-                                                        .background(
-                                                            Color(0xFFF9B859),
-                                                            shape = CircleShape
-                                                        )
-                                                        .circleLayout()
-                                                        .padding(8.dp)
-                                                )
-
-                                                androidx.compose.material3.Text(
-                                                    text = "Alarme:",
-                                                    textAlign = TextAlign.Start,
-                                                    modifier = Modifier.padding(end = 5.dp),
-                                                    style = MaterialTheme.typography.bodyMedium.copy(
-                                                        color = MaterialTheme.colorScheme.onBackground,
-                                                        fontWeight = FontWeight.Bold
-                                                    ),
-                                                )
-
-
-                                                Text(
-                                                    text = it.alarme,
-                                                    textAlign = TextAlign.Center,
-                                                    color = Color.White,
-                                                    modifier = Modifier
-                                                        .background(
-                                                            Color(0xFFF96A59),
-                                                            shape = CircleShape
-                                                        )
-                                                        .circleLayout()
-                                                        .padding(8.dp)
-                                                )
-
-                                            }
 
                                             Spacer(Modifier.height(4.dp))
                                         }
-
-
                                     }
                                 }
                             }
@@ -681,7 +703,7 @@ fun SegmentButton(
                         bottomEnd = 0.dp
                     )
 
-                    2 -> RoundedCornerShape(
+                    1 -> RoundedCornerShape(
                         topStart = 0.dp,
                         topEnd = cornerRadius,
                         bottomStart = 0.dp,
@@ -706,6 +728,7 @@ fun SegmentButton(
                 ) {
                 Text(
                     text = item,
+                    textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyMedium,
                     color = if (selectedIndexes.contains(item)) {
                         MaterialTheme.colorScheme.onPrimary

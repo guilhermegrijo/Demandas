@@ -21,6 +21,10 @@ data class DemandaResponse(
     val aviso: String?,
     val alerta: String?,
     val alarme: String?,
-    val prazo: String?,
+    val prazoPrevisto: String? = null,
+    val prazoRealizado: String? = null,
+    val prazoRestante: String? = null,
+    val tipoAlerta: String? = null,
+    val idAlertaClassificacao: Long,
     val mxlAtividadeMobileDetalhe: String?
 )

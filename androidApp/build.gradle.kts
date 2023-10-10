@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -10,7 +11,7 @@ android {
         applicationId = "br.com.sp.demandas.android"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
+        versionCode = 5
         versionName = "1.0"
     }
     buildFeatures {
@@ -18,11 +19,6 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.0"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
     }
     buildTypes {
         getByName("release") {
@@ -48,5 +44,8 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.compose.material3:material3:1.1.1")
     implementation("io.insert-koin:koin-android:3.4.3")
+    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
+    implementation("com.google.firebase:firebase-messaging-ktx")
+
 
 }

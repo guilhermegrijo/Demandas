@@ -33,8 +33,12 @@ fun DemandaResponse.toDomain() = Demanda(
     if (valorEstado != null) moneyFormat(valorEstado) ?: "" else "",
     aviso ?: "0",
     alerta ?: "0",
-    alarme ?: "",
-    prazo
+    alarme ?: "0",
+    prazoPrevisto ?: " ",
+    prazoRealizado ?: " ",
+    prazoRestante ?: " ",
+    tipoAlerta?: "",
+    idAlertaClassificacao
 )
 
 fun DemandaDetalheResponse.toDomain() = DemandaDetalhe(

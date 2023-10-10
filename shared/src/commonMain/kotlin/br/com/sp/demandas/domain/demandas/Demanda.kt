@@ -16,6 +16,10 @@ data class Demanda(
     val aviso: String,
     val alerta: String,
     val alarme: String,
-    val prazo: String?,
+    val prazoPrevisto: String,
+    val prazoRealizado: String,
+    val prazoRestante: String,
+    val tipoAlerta: String,
+    val idAlertaClassificacao: Long,
 
 )

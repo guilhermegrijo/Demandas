@@ -1,7 +1,9 @@
 package br.com.sp.demandas.core.di
 
+import br.com.sp.demandas.core.app.FcmToken
 import br.com.sp.demandas.core.app.KeyValueStorage
 import br.com.sp.demandas.core.app.Platform
+import br.com.sp.demandas.core.IosFCMToken
 import com.liftric.kvault.KVault
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -13,6 +15,7 @@ import platform.UIKit.UIDevice
 internal actual val platformCoreModule: Module = module {
     singleOf(::IosKeyValueStorage) bind KeyValueStorage::class
     singleOf(::IOSPlatform) bind Platform::class
+    singleOf(::IosFCMToken) bind FcmToken::class
 }
 
 class IosKeyValueStorage : KeyValueStorage {

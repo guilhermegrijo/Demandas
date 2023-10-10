@@ -21,7 +21,8 @@ class AndroidApp : Application() {
                 useCasesModule,
                 repositoryModule,
                 remoteSourceModule,
-                dispatcherModule
+                dispatcherModule,
+                androidModule
             )
         }
     }

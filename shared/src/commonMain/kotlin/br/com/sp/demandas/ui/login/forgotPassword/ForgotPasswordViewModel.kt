@@ -27,7 +27,8 @@ class ForgotPasswordViewModel(private val forgotPasswordUseCase: ForgotPasswordU
 
         coroutineScope.launch {
             forgotPasswordUseCase.invoke(user).onFailure {
-                setEffect { ForgotScreenContract.Effect.NavigateToCheckCode("email@email.com") }
+                setEffect { ForgotScreenContract.Effect.ShowSnackbar(it) }
+                setState { ForgotScreenContract.State(stateForgotPassword = ResourceUiState.Error(it)) }
             }.onSuccess {
                 setEffect { ForgotScreenContract.Effect.NavigateToCheckCode(it) }
             }
@@ -46,7 +47,7 @@ interface ForgotScreenContract {
     ) : UiState
 
     sealed interface Effect : UiEffect {
-        data class NavigateToCheckCode(val user : String) : Effect
+        data class NavigateToCheckCode(val user: String) : Effect
         data class ShowSnackbar(val throwable: Throwable) : Effect
     }
 }

@@ -34,7 +34,9 @@ class GetDemandasFiltroUseCase(
                     idConvenio = param.filtroInput.idConvenio?.id,
                     alarme = param.filtroInput.alarme,
                     alerta = param.filtroInput.alerta,
-                    aviso = param.filtroInput.aviso
+                    aviso = param.filtroInput.aviso,
+                    noPrazo = param.filtroInput.noPrazo,
+                    numeroDemanda = param.filtroInput.numeroDemanda
                 )
             return DemandaState(
                 list,
@@ -57,6 +59,7 @@ class GetDemandasFiltroUseCase(
                     alarme = param.filtroInput.alarme,
                     alerta = param.filtroInput.alerta,
                     aviso = param.filtroInput.aviso,
+                    noPrazo = param.filtroInput.noPrazo,
                     numeroDemanda = param.filtroInput.numeroDemanda
                 )
             return DemandaState(
@@ -106,15 +109,14 @@ class GetDemandasFiltroUseCase(
                                 true
                             )
                         ),
-                        FiltroState(
+                        param.filtroState?.copy(
                             filtroHierarquiaRegional = hierarquiaRegional,
                             filtroPrefeituras = listPrefeituras,
                             comboConvenio = listConvenio,
                             comboEtapa = listAtividadeEtapa,
-                            comboStatus = listAtividadeStatus,
-                        ),
-
+                            comboStatus = listAtividadeStatus
                         )
+                    )
 
                 } else {
                     val listPrefeituras =
@@ -131,6 +133,7 @@ class GetDemandasFiltroUseCase(
                             alarme = param.filtroInput?.alarme,
                             alerta = param.filtroInput?.alerta,
                             aviso = param.filtroInput?.aviso,
+                            noPrazo = param.filtroInput?.noPrazo,
                             numeroDemanda = param.filtroInput?.numeroDemanda
                         )
                     return DemandaState(
@@ -143,7 +146,7 @@ class GetDemandasFiltroUseCase(
                                 true
                             )
                         ),
-                        FiltroState(
+                        param.filtroState?.copy(
                             prefeituraFiltro = listPrefeituras.first().texto,
                             filtroPrefeituras = listPrefeituras,
                             comboConvenio = listConvenio,

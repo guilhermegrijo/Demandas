@@ -10,6 +10,7 @@ interface IDemandaRepository {
         aviso: Boolean? = null,
         alerta: Boolean? = null,
         alarme: Boolean? = null,
+        noPrazo : Boolean? = null,
         numeroDemanda : String? = null,
     ): List<Demanda>
 

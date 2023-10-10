@@ -27,7 +27,7 @@ fun EsqueceuSenhaTitleAndSubTitle() {
 private fun TitleAndSubTitle(
     modifier: Modifier = Modifier,
     title: String = "Esqueceu a senha?",
-    subtitle: String = "Para mudar de senha você precisa colocar o nome do seu usúario ou e-mail cadastrado na MAX e então enviaremos "+
+    subtitle: String = "Para mudar de senha você precisa colocar o nome do seu usúario ou e-mail cadastrado no sistema e então enviaremos "+
             "um link ao seu e-mail para você redefinir sua senha."
 ) {
     Column(

@@ -43,7 +43,7 @@ class LoginViewModel(
                         LoginScreenContract.State(
                             stateLogin = ResourceUiState.Success(
                                 LoginState(
-                                    it.login, askEnrollBiometry = false, biometricAvaible = true
+                                    it.login, askEnrollBiometry = false, biometricAvaible = false
                                 )
                             )
                         )
@@ -72,14 +72,14 @@ class LoginViewModel(
             }.onSuccess {
                 setState { copy(stateLogin = ResourceUiState.Idle) }
                 updateUserUseCase.invoke(it.copy(flagPrimeiroAcesso = false))
-                if (biometryAuthenticator.isBiometricAvailable() && UserState.value.flagPrimeiroAcesso) {
+                /*if (biometryAuthenticator.isBiometricAvailable() && UserState.value.flagPrimeiroAcesso) {
                     if (platform.name.contains(
                             "IOS",
                             ignoreCase = true
                         )
                     ) setEffect { LoginScreenContract.Effect.ShowDialog }
                     else askEnrollment()
-                } else setEffect { LoginScreenContract.Effect.NavigateToHome }
+                } else */setEffect { LoginScreenContract.Effect.NavigateToHome }
 
             }
         }
@@ -95,7 +95,7 @@ class LoginViewModel(
                 setState { copy(stateLogin = ResourceUiState.Loading) }
                 coroutineScope.launch {
                     UserState.value.let {
-                        if (biometryAuthenticator.isBiometricAvailable() && it.loginByBiometry)
+                        /*if (biometryAuthenticator.isBiometricAvailable() && it.loginByBiometry)
                             try {
                                 val isSuccess =
                                     biometryAuthenticator.checkBiometryAuthentication(
@@ -134,7 +134,7 @@ class LoginViewModel(
                                 setEffect { LoginScreenContract.Effect.ShowSnackbar(throwable) }
                                 setState { copy(stateLogin = ResourceUiState.Error(throwable)) }
                             }
-                        else doLogin(event.user, event.password)
+                        else */doLogin(event.user, event.password)
                     }
                 }
             }
