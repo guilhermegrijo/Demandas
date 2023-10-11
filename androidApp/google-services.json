@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1013956522896",
+    "project_id": "convenios-8239f",
+    "storage_bucket": "convenios-8239f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013956522896:android:b294f5b8e9719455053915",
+        "android_client_info": {
+          "package_name": "br.com.sp.demandas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCM0nsf3JOGcnQdJ4IcfnL7EBblVy-jfCo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013956522896:android:6af6ac1db5edf398053915",
+        "android_client_info": {
+          "package_name": "br.com.sp.demandas.android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCM0nsf3JOGcnQdJ4IcfnL7EBblVy-jfCo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
