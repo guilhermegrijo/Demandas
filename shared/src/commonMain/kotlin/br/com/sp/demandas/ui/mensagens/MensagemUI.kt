@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFrom
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -167,10 +168,14 @@ class MensagemUI : Screen {
         Scaffold(
             topBar = {
                 MaxTopAppBarCenter(title = {
-                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
                         Image(
-                            modifier = Modifier.weight(0.7f),
-                            painter = painterResource(MR.images.govsp),
+                            modifier = Modifier.size(70.dp),
+                            painter = painterResource(MR.images.sp_mini),
                             contentDescription = "logo"
                         )
                         Text("SGRI", fontWeight = FontWeight.SemiBold)

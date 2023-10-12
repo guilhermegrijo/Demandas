@@ -162,8 +162,8 @@ class LoginScreen : Screen {
             topBar = {
                 MaxTopAppBarCenter(title = {
                     Image(
-                        modifier = Modifier.size(240.dp),
-                        painter = painterResource(MR.images.govsp),
+                        modifier = Modifier.size(100.dp),
+                        painter = painterResource(MR.images.sp_mini),
                         contentDescription = "logo"
                     )
 

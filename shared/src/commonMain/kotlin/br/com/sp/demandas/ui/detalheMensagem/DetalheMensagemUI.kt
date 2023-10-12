@@ -82,7 +82,7 @@ class DetalheMensagemUI(private val mensagem: Mensagem) : Screen {
                     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                         Image(
                             modifier = Modifier.weight(0.7f),
-                            painter = painterResource(MR.images.govsp),
+                            painter = painterResource(MR.images.sp_mini),
                             contentDescription = "logo"
                         )
                         Text("SGRI", fontWeight = FontWeight.SemiBold)

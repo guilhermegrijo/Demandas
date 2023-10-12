@@ -145,7 +145,7 @@ class ForgotPasswordUI : Screen {
                         .weight(1f)
                         .fillMaxHeight()
                 )
-                val logo = if (isSystemInDarkTheme()) MR.images.govsp else MR.images.govsp
+                val logo = if (isSystemInDarkTheme()) MR.images.sp_mini else MR.images.sp_mini
 
                 Image(
                     modifier = Modifier.fillMaxWidth(0.7f),

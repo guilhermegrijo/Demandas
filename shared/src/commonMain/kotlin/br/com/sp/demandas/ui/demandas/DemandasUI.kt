@@ -234,11 +234,12 @@ class DemandasUI : Screen {
                     MaxTopAppBarCenter(title = {
                         Row(
                             Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
                         ) {
                             Image(
-                                modifier = Modifier.weight(0.7f),
-                                painter = painterResource(MR.images.govsp),
+                                modifier = Modifier.height(80.dp),
+                                painter = painterResource(MR.images.sp_mini),
                                 contentDescription = "logo"
                             )
                             Text("SGRI", fontWeight = FontWeight.SemiBold)

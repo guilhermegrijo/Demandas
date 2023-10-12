@@ -94,9 +94,11 @@ fun FilterBottomSheet(
                 windowInsets = if (bottomSheetValue == ModalBottomSheetValue.HalfExpanded) WindowInsets.captionBar else WindowInsets.statusBars,
                 title = {
                     Row(
-                        modifier = Modifier.padding(start = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier.padding(start = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
                     ) {
+
                         Icon(
                             painter = painterResource(MR.images.filter_alt),
                             contentDescription = "user_passowrd",
@@ -104,12 +106,18 @@ fun FilterBottomSheet(
                         )
                         Spacer(Modifier.width(12.dp))
                         Text("Filtro")
-                        Image(
-                            modifier = Modifier.height(70.dp),
-                            painter = painterResource(MR.images.govsp),
-                            contentDescription = "logo"
-                        )
-                        Text("SGRI", fontWeight = FontWeight.SemiBold)
+                        Row(
+                            modifier = Modifier.weight(1f),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Image(
+                                modifier = Modifier.height(70.dp),
+                                painter = painterResource(MR.images.sp_mini),
+                                contentDescription = "logo"
+                            )
+                            Text("SGRI", fontWeight = FontWeight.SemiBold)
+                        }
                     }
 
                 },
@@ -136,7 +144,7 @@ fun FilterBottomSheet(
 
                 Column(modifier = Modifier.fillMaxWidth()) {
                     /*val logo =
-                        if (isSystemInDarkTheme()) MR.images.govsp else MR.images.logosp_branco
+                        if (isSystemInDarkTheme()) MR.images.sp_mini else MR.images.logosp_branco
 
                     Image(
                         modifier = Modifier.fillMaxWidth(0.7f).background(
@@ -209,7 +217,7 @@ fun FilterBottomSheet(
                             ) {
                                 viewModel.handleEvent(DemandaScreenContract.Event.FiltroRegional(it))
                             }
-                        else if((uiState.state as ResourceUiState.Success).data.tipoAcesso == TipoAcesso.REGIONAL)
+                        else if ((uiState.state as ResourceUiState.Success).data.tipoAcesso == TipoAcesso.REGIONAL)
                             Column(
                                 modifier = Modifier
                                     .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -229,7 +237,8 @@ fun FilterBottomSheet(
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .height(55.dp),
-                                            value = uiState.filtroState.filtroHierarquiaRegional.firstOrNull()?.texto ?: "",
+                                            value = uiState.filtroState.filtroHierarquiaRegional.firstOrNull()?.texto
+                                                ?: "",
                                             onValueChange = {
                                             },
                                             enabled = false,
@@ -251,18 +260,18 @@ fun FilterBottomSheet(
 
                         if (uiState.filtroState.filtroPrefeituras.isNotEmpty()) {
 
-                            if((uiState.state as ResourceUiState.Success).data.tipoAcesso == TipoAcesso.REGIONAL || (uiState.state as ResourceUiState.Success).data.tipoAcesso == TipoAcesso.TOTAL)
-                            AutoComplete(
-                                titulo = "Prefeitura",
-                                filtro = uiState.filtroState.prefeituraFiltro ?: "",
-                                list = uiState.filtroState.filtroPrefeituras,
-                            ) {
-                                viewModel.handleEvent(
-                                    DemandaScreenContract.Event.FiltroPrefeitura(
-                                        it
+                            if ((uiState.state as ResourceUiState.Success).data.tipoAcesso == TipoAcesso.REGIONAL || (uiState.state as ResourceUiState.Success).data.tipoAcesso == TipoAcesso.TOTAL)
+                                AutoComplete(
+                                    titulo = "Prefeitura",
+                                    filtro = uiState.filtroState.prefeituraFiltro ?: "",
+                                    list = uiState.filtroState.filtroPrefeituras,
+                                ) {
+                                    viewModel.handleEvent(
+                                        DemandaScreenContract.Event.FiltroPrefeitura(
+                                            it
+                                        )
                                     )
-                                )
-                            }
+                                }
                             if (uiState.filtroState.filtroPrefeituras.isNotEmpty() && (uiState.state as ResourceUiState.Success).data.tipoAcesso == TipoAcesso.PREFEITURA) {
                                 Column(
                                     modifier = Modifier
@@ -374,7 +383,8 @@ fun FilterBottomSheet(
                                 mutableStateOf(uiState.filtroState.filtroSelect)
                             }
 
-                            val itemsList = listOf("No prazo (Avisos)", "Prazo vencido (alerta e alarme)")
+                            val itemsList =
+                                listOf("No prazo (Avisos)", "Prazo vencido (alerta e alarme)")
 
                             SegmentButton(
                                 modifier = Modifier.padding(all = 16.dp).fillMaxWidth(),
