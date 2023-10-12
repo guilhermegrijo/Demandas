@@ -50,7 +50,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         completionHandler(UIBackgroundFetchResult.newData)
     }
     
-
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         
@@ -67,30 +66,31 @@ extension AppDelegate: MessagingDelegate {
     // Guardando Token
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         let dataDict: [String: String] = ["token": fcmToken ?? ""]
+        // Envio do token
         print(dataDict)
     }
 }
 
 // User Notifications ( In app notifications )
 extension AppDelegate: UNUserNotificationCenterDelegate {
-  // Receive displayed notifications for iOS 10 devices.
-  func userNotificationCenter(_ center: UNUserNotificationCenter,
-                              willPresent notification: UNNotification) async
-    -> UNNotificationPresentationOptions {
-    let userInfo = notification.request.content.userInfo
-
+    // Receive displayed notifications for iOS 10 devices.
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+        let userInfo = notification.request.content.userInfo
+        
         // Fazer algo com a informaçao
-    print(userInfo)
-
-    // Change this to your preferred presentation option
+        // Ativa quando recebe
+        print(userInfo)
+        
+        // Change this to your preferred presentation option
         return [[.banner, .badge, .sound]]
-  }
-
-  func userNotificationCenter(_ center: UNUserNotificationCenter,
-                              didReceive response: UNNotificationResponse) async {
-    let userInfo = response.notification.request.content.userInfo
-
-    // Print full message.
-    print(userInfo)
-  }
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse) async {
+        let userInfo = response.notification.request.content.userInfo
+        
+        // Print full message.
+        // Ativa quando clica
+        print(userInfo)
+    }
 }
