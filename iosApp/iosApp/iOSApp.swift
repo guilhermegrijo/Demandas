@@ -89,6 +89,7 @@ extension AppDelegate: MessagingDelegate {
     // Guardando Token
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         let dataDict: [String: String] = ["token": fcmToken ?? ""]
+        Main_iosKt.setIosToken(token: fcmToken ?? "")
         print(dataDict)
     }
 }
