@@ -1,17 +1,13 @@
 package br.com.sp.demandas.ui.home
 
-import EsqueceuSenhaTitleAndSubTitle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowColumn
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,25 +16,24 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.BadgedBox
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHost
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Badge
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,10 +43,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.sp.demandas.MR
@@ -60,27 +54,18 @@ import br.com.sp.demandas.core.ServerException
 import br.com.sp.demandas.core.UnknownException
 import br.com.sp.demandas.core.app.subtitle
 import br.com.sp.demandas.core.app.title
+import br.com.sp.demandas.core.ui.ResourceUiState
 import br.com.sp.demandas.core.ui.getScreenModel
-import br.com.sp.demandas.design.components.CustomDialog
-import br.com.sp.demandas.design.components.MaxCenterTopAppBarCustom
-import br.com.sp.demandas.design.components.MaxCenterTopAppBarNavigation
-import br.com.sp.demandas.design.components.MaxColumn
-import br.com.sp.demandas.design.components.MaxTopAppBar
 import br.com.sp.demandas.design.components.MaxTopAppBarCenter
 import br.com.sp.demandas.design.components.Snackbar
 import br.com.sp.demandas.design.components.SnackbarType
+import br.com.sp.demandas.domain.mensagem.Mensagem
 import br.com.sp.demandas.ui.demandas.DemandasUI
-import br.com.sp.demandas.ui.login.forgotPassword.EsqueceuSenhaField
-import br.com.sp.demandas.ui.login.forgotPassword.EsqueceuSenhaTopAppBar
-import br.com.sp.demandas.ui.login.forgotPassword.ForgotPasswordUI
-import br.com.sp.demandas.ui.login.makeLogin.LoginScreenContract
-import br.com.sp.demandas.ui.login.makeLogin.LoginViewModel
 import br.com.sp.demandas.ui.mensagens.MensagemUI
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.mvvm.flow.compose.observeAsActions
-import dev.icerock.moko.resources.compose.fontFamilyResource
 import dev.icerock.moko.resources.compose.painterResource
 import kotlinx.coroutines.launch
 
@@ -97,6 +82,8 @@ class HomeScreen : Screen {
         val viewModel = getScreenModel<HomeViewModel>()
         val snackbarType = remember { mutableStateOf(SnackbarType.INFO) }
         val navigator = LocalNavigator.currentOrThrow
+
+        val state by viewModel.uiState.collectAsState()
 
         viewModel.effect.observeAsActions {
             if (it is HomeScreenContract.Effect.ShowSnackbar) {
@@ -123,7 +110,7 @@ class HomeScreen : Screen {
                             scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                             scaffoldState.snackbarHostState.showSnackbar(
                                 it.throwable.message.toString(),
-                                "Erro no servidor",
+                                "",
                                 SnackbarDuration.Indefinite
                             )
                         }
@@ -202,36 +189,37 @@ class HomeScreen : Screen {
                     ),
                 )*/
 
-                    Column(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.fillMaxWidth()) {
 
-                        Spacer(Modifier.height(16.dp))
+                    Spacer(Modifier.height(16.dp))
 
-                        Column(
-                            Modifier.fillMaxWidth().background(Color.LightGray).padding(vertical = 12.dp)
-                        ) {
-                            androidx.compose.material3.Text(
-                                text = title,
-                                textAlign = TextAlign.Center,
-                                color = Color.Black,
-                                modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 12.sp
-                                ),
-                            )
-                            androidx.compose.material3.Text(
-                                text = subtitle,
-                                textAlign = TextAlign.Center,
-                                color = Color.Black,
-                                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    fontWeight = FontWeight.Normal,
-                                    fontSize = 10.sp
-                                ),
-                            )
-                        }
-
+                    Column(
+                        Modifier.fillMaxWidth().background(Color.LightGray)
+                            .padding(vertical = 12.dp)
+                    ) {
+                        androidx.compose.material3.Text(
+                            text = title,
+                            textAlign = TextAlign.Center,
+                            color = Color.Black,
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 12.sp
+                            ),
+                        )
+                        androidx.compose.material3.Text(
+                            text = subtitle,
+                            textAlign = TextAlign.Center,
+                            color = Color.Black,
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 10.sp
+                            ),
+                        )
                     }
+
+                }
 
 
                 Spacer(Modifier.height(35.dp))
@@ -246,15 +234,17 @@ class HomeScreen : Screen {
 
                 FlowRow(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp),
-
                     verticalArrangement = Arrangement.Top,
                     maxItemsInEachRow = 2
                 ) {
                     Card(
                         shape = RoundedCornerShape(10.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color(0xFF0e5a94), contentColor = Color.White),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color(0xFF0e5a94),
+                            contentColor = Color.White
+                        ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                        modifier = Modifier.padding(16.dp, 5.dp, 16.dp, 10.dp).fillMaxWidth(0.45f)
+                        modifier = Modifier.padding(16.dp, 5.dp, 8.dp, 10.dp).fillMaxWidth(0.43f)
                             .clickable {
                                 viewModel.setEvent(HomeScreenContract.Event.GoTo(DemandasUI()))
                             },
@@ -286,46 +276,71 @@ class HomeScreen : Screen {
 
 
 
+
                     Card(
                         shape = RoundedCornerShape(10.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color(0xFF0e5a94), contentColor = Color.White),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color(0xFF0e5a94),
+                            contentColor = Color.White
+                        ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                        modifier = Modifier.padding(16.dp, 5.dp, 16.dp, 10.dp).fillMaxWidth(0.45f)
+                        modifier = Modifier.padding(16.dp, 5.dp, 0.dp, 10.dp).fillMaxWidth(0.43f)
                             .clickable {
                                 viewModel.setEvent(HomeScreenContract.Event.GoTo(MensagemUI()))
                             },
                     ) {
-                        Column(
-                            Modifier.padding(top = 16.dp)
-                        ) {
 
-                            Image(
-                                modifier = Modifier
-                                    .height(55.dp)
-                                    .fillMaxWidth(),
-                                painter = painterResource(MR.images.mensagem),
-                                contentDescription = "demanda_icone",
-                            )
+                            Column(
+                                Modifier.fillMaxWidth().padding(top = 16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
 
-                            //TODO(): https://freeicons.io/icon-list/free,-flat-line-ecommerce-icon-pack
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                androidx.compose.material3.Text(
-                                    text = "Mensagens",
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier
-                                        .padding(top = 0.dp)
-                                        .fillMaxWidth(),
-                                    style = MaterialTheme.typography.titleSmall,
-                                )
+                                BadgedBox(badge = {
+                                    if (state.state is ResourceUiState.Success) {
+                                        val mensagens =
+                                            (state.state as ResourceUiState.Success<List<Mensagem>>).data
+                                        if (mensagens.isNotEmpty())
+                                            Badge {
+                                                Text(
+                                                    text = mensagens.count().coerceAtMost(999).toString(),
+                                                    style = TextStyle(
+                                                        color = Color.White
+                                                    ),
+                                                    modifier = Modifier.padding(2.dp)
+                                                )
+                                            }
+                                    }
+                                }) {
+                                    Image(
+                                        modifier = Modifier
+                                            .height(55.dp),
+                                        painter = painterResource(MR.images.mensagem),
+                                        contentDescription = "demanda_icone",
+                                    )
+                                }
+
+                                //TODO(): https://freeicons.io/icon-list/free,-flat-line-ecommerce-icon-pack
+                                Column(modifier = Modifier.padding(16.dp)) {
+                                    androidx.compose.material3.Text(
+                                        text = "Mensagens",
+                                        textAlign = TextAlign.Center,
+                                        modifier = Modifier
+                                            .padding(top = 0.dp)
+                                            .fillMaxWidth(),
+                                        style = MaterialTheme.typography.titleSmall,
+                                    )
+                                }
                             }
                         }
-                    }
 
                     Card(
                         shape = RoundedCornerShape(10.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.LightGray, contentColor = Color.White),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.LightGray,
+                            contentColor = Color.White
+                        ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                        modifier = Modifier.padding(16.dp, 5.dp, 16.dp, 10.dp).fillMaxWidth(0.45f),
+                        modifier = Modifier.padding(16.dp, 5.dp, 8.dp, 10.dp).fillMaxWidth(0.43f),
                     ) {
                         Column(
                             Modifier.padding(top = 16.dp)
@@ -354,9 +369,12 @@ class HomeScreen : Screen {
                     }
                     Card(
                         shape = RoundedCornerShape(10.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.LightGray, contentColor = Color.White),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.LightGray,
+                            contentColor = Color.White
+                        ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                        modifier = Modifier.padding(16.dp, 5.dp, 16.dp, 10.dp).fillMaxWidth(0.45f),
+                        modifier = Modifier.padding(16.dp, 5.dp, 0.dp, 10.dp).fillMaxWidth(0.43f),
                     ) {
                         Column(
                             Modifier.padding(top = 16.dp)
@@ -374,6 +392,40 @@ class HomeScreen : Screen {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 androidx.compose.material3.Text(
                                     text = "Fotos",
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .padding(top = 0.dp)
+                                        .fillMaxWidth(),
+                                    style = MaterialTheme.typography.titleSmall,
+                                )
+                            }
+                        }
+                    }
+                    Card(
+                        shape = RoundedCornerShape(10.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.LightGray,
+                            contentColor = Color.White
+                        ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                        modifier = Modifier.padding(16.dp, 5.dp, 0.dp, 10.dp).fillMaxWidth(0.43f),
+                    ) {
+                        Column(
+                            Modifier.padding(top = 16.dp)
+                        ) {
+
+                            Image(
+                                modifier = Modifier
+                                    .height(55.dp)
+                                    .fillMaxWidth(),
+                                painter = painterResource(MR.images.dashboard),
+                                contentDescription = "demanda_icone",
+                            )
+
+                            //TODO(): https://freeicons.io/ecommerce-icon-set-11/dashboard-chart-graph-icon-279917
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                androidx.compose.material3.Text(
+                                    text = "Visão gerencial",
                                     textAlign = TextAlign.Center,
                                     modifier = Modifier
                                         .padding(top = 0.dp)

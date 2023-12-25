@@ -159,11 +159,14 @@ fun AutoComplete(titulo: String, filtro: String, list: List<Filtro>, function: (
                             textFieldSize = coordinates.size.toSize()
                         },
                     value = filter,
-                    onValueChange = { selectedItem ->
-                        filter = selectedItem
+                    onValueChange = { selectedItem -> filter = selectedItem
                         try {
-                            val item = list.find { it.texto == selectedItem }
-                            item?.let { function.invoke(item) }
+                            if(filter.isNotEmpty()) {
+                                val item = list.find { it.texto == selectedItem }
+                                item?.let { function.invoke(item) }
+                            }
+                            else
+                                function.invoke(Filtro("", "", false))
 
                         } catch (ex: Exception) {
                             println(ex)

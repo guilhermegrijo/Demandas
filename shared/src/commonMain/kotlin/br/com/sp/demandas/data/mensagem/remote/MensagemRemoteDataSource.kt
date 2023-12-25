@@ -2,6 +2,7 @@ package br.com.sp.demandas.data.mensagem.remote
 
 import br.com.sp.demandas.core.ApiResponse
 import br.com.sp.demandas.core.ErrorResponse
+import br.com.sp.demandas.core.MensagemRetorno
 import br.com.sp.demandas.core.safeRequest
 import br.com.sp.demandas.data.auth.local.AuthCredentials
 import br.com.sp.demandas.data.filtroDemanda.remote.FiltroResponse
@@ -20,18 +21,18 @@ class MensagemRemoteDataSource(
     private val userSettings: AuthCredentials,
 ) {
 
-    suspend fun getMensagens(): ApiResponse<List<MensagemResponse>, ErrorResponse> =
+    suspend fun getMensagens(): ApiResponse<List<MensagemResponse>, MensagemRetorno> =
         httpClient.safeRequest {
             url {
                 method = HttpMethod.Get
-                path("api/v1.0/Alerta/AlertaMensagem/GetList")
+                path("api/v1.0/Alerta/AlertaMensagem/GetMensagemMobile")
                 contentType(ContentType.Application.Json)
                 header(HttpHeaders.Authorization, "Bearer ${userSettings.getToken()}")
             }
         }
 
-    suspend fun enviarToken(tokenRequest: TokenRequest){
-        httpClient.request {
+    suspend fun enviarToken(tokenRequest: TokenRequest) : ApiResponse<Unit, MensagemRetorno> =
+        httpClient.safeRequest {
             url {
                 method = HttpMethod.Post
                 path("api/v1.0/Alerta/firebase/SetFirebaseToken")
@@ -40,5 +41,5 @@ class MensagemRemoteDataSource(
                 header(HttpHeaders.Authorization, "Bearer ${userSettings.getToken()}")
             }
         }
-    }
+
 }

@@ -27,8 +27,7 @@ fun EsqueceuSenhaTitleAndSubTitle() {
 private fun TitleAndSubTitle(
     modifier: Modifier = Modifier,
     title: String = "Esqueceu a senha?",
-    subtitle: String = "Para mudar de senha você precisa colocar o nome do seu usúario ou e-mail cadastrado no sistema e então enviaremos "+
-            "um link ao seu e-mail para você redefinir sua senha."
+    subtitle: String = "Insira sua nova senha e a confirme"
 ) {
     Column(
         modifier.fillMaxWidth(),

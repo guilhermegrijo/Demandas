@@ -14,6 +14,7 @@ import br.com.sp.demandas.design.components.MaxButton
 
 @Composable
 fun ButtonAction(
+    enabled: Boolean = true,
     onClick: () -> Unit
 ) {
     Row(
@@ -26,7 +27,8 @@ fun ButtonAction(
         MaxButton(
             modifier = Modifier.fillMaxWidth().height(50.dp),
             text = "Entrar",
-            enabled = true,
+            enabled = enabled,
+            loading = enabled,
             onClick = onClick
         )
     }

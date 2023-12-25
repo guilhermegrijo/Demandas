@@ -19,6 +19,14 @@ suspend inline fun <reified T, reified E> HttpClient.safeRequest(
                 ApiResponse.Success(response.body())
             }
 
+            400 -> {
+                ApiResponse.Error.HttpError(
+                    code = response.status.value,
+                    errorBody = response.body(),
+                    errorMessage = "Status Code: ${response.status.value}",
+                    )
+            }
+
             404 -> {
                 ApiResponse.Error.HttpError(
                     code = response.status.value,
@@ -85,7 +93,7 @@ sealed class ApiResponse<out T, out E> {
          */
         data class HttpError<E>(
             val code: Int,
-            val errorBody: String?,
+            val errorBody: E,
             val errorMessage: String?,
         ) : Error<E>()
 

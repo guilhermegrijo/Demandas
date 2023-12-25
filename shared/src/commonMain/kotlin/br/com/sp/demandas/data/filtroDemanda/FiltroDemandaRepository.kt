@@ -31,8 +31,7 @@ class FiltroDemandaRepository(
             }
 
             is ApiResponse.Error.HttpError -> {
-                throw ServerException("${result.errorMessage}")
-            }
+                throw ServerException("${result.errorBody.mensagemRetorno}")            }
 
             is ApiResponse.Error.SerializationError -> {
                 throw ClientException("${result.errorMessage}")
@@ -53,7 +52,7 @@ class FiltroDemandaRepository(
             }
 
             is ApiResponse.Error.HttpError -> {
-                throw ServerException("${result.errorMessage}")
+                throw ServerException("${result.errorBody.mensagemRetorno}")
             }
 
             is ApiResponse.Error.SerializationError -> {

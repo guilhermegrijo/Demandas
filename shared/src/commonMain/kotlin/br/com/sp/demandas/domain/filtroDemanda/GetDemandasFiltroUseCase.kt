@@ -21,74 +21,41 @@ class GetDemandasFiltroUseCase(
 
 
             val listPrefeituras =
-                filtroDemandaRepository.getHierarquiaPrefeitura(param.filtroInput.regional.id.toInt())
-                    .toMutableList()
-            listPrefeituras.add(0, Filtro("", "", false))
+                param.filtroInput.regional.id.toIntOrNull()?.let {
+                    filtroDemandaRepository.getHierarquiaPrefeitura(it)
+                        .toMutableList()
+                }
+            listPrefeituras?.add(0, Filtro("", "", false))
 
-            val list =
-                demandaRepository.getDemandas(
-                    idRegional = param.filtroInput.regional.id,
-                    idPrefeitura = param.filtroInput.prefeitura?.id,
-                    idAtividadeEtapa = param.filtroInput.idAtividadeEtapa?.id,
-                    idAtividadeStatus = param.filtroInput.idAtividadeStatus?.id,
-                    idConvenio = param.filtroInput.idConvenio?.id,
-                    alarme = param.filtroInput.alarme,
-                    alerta = param.filtroInput.alerta,
-                    aviso = param.filtroInput.aviso,
-                    noPrazo = param.filtroInput.noPrazo,
-                    numeroDemanda = param.filtroInput.numeroDemanda
-                )
             return DemandaState(
-                list,
+                emptyList(),
                 param.tipoAcesso,
                 param.filtroInput,
                 filtroState = param.filtroState?.copy(
-                    filtroPrefeituras = listPrefeituras.toMutableList(),
+                    filtroPrefeituras = listPrefeituras?.toMutableList() ?: emptyList(),
                     regionalFiltro = param.filtroInput.regional.texto,
                 )
             )
-        } else if (param.filtroInput?.regional != null && param.filtroInput.prefeitura != null) {
-
-            val list =
-                demandaRepository.getDemandas(
-                    idRegional = param.filtroInput.regional.id,
-                    idPrefeitura = param.filtroInput.prefeitura.id,
-                    idAtividadeEtapa = param.filtroInput.idAtividadeEtapa?.id,
-                    idAtividadeStatus = param.filtroInput.idAtividadeStatus?.id,
-                    idConvenio = param.filtroInput.idConvenio?.id,
-                    alarme = param.filtroInput.alarme,
-                    alerta = param.filtroInput.alerta,
-                    aviso = param.filtroInput.aviso,
-                    noPrazo = param.filtroInput.noPrazo,
-                    numeroDemanda = param.filtroInput.numeroDemanda
-                )
-            return DemandaState(
-                list,
-                param.tipoAcesso,
-                param.filtroInput,
-                filtroState = param.filtroState
-            )
-
         } else {
             val hierarquiaRegional = filtroDemandaRepository.getHierarquiaRegional()
-            var listAtividadeStatus: List<Filtro>
-            var listAtividadeEtapa: List<Filtro>
-            var listConvenio: List<Filtro>
+            var listAtividadeStatus: List<Filtro> = emptyList()
+            var listAtividadeEtapa: List<Filtro> = emptyList()
+            var listConvenio: List<Filtro> = emptyList()
 
-            listAtividadeStatus =
-                filtroDemandaRepository.getAtividadeStatusFiltro().sortedBy { it.texto }
-                    .toMutableList()
-            listAtividadeStatus.add(0, Filtro("", "", false))
+            /*            listAtividadeStatus =
+                            filtroDemandaRepository.getAtividadeStatusFiltro().sortedBy { it.texto }
+                                .toMutableList()
+                        listAtividadeStatus.add(0, Filtro("", "", false))*/
 
             listAtividadeEtapa =
                 filtroDemandaRepository.getAtividadeEtapaFiltro().sortedBy { it.texto }
                     .toMutableList()
             listAtividadeEtapa.add(0, Filtro("", "", false))
 
-            listConvenio =
-                filtroDemandaRepository.getAtividadeConvenioFiltro().sortedBy { it.texto }
-                    .toMutableList()
-            listConvenio.add(0, Filtro("", "", false))
+            /*            listConvenio =
+                            filtroDemandaRepository.getAtividadeConvenioFiltro().sortedBy { it.texto }
+                                .toMutableList()
+                        listConvenio.add(0, Filtro("", "", false))*/
 
             if (hierarquiaRegional.isEmpty() || hierarquiaRegional.size == 1) {
                 if (hierarquiaRegional.size == 1) {
@@ -123,21 +90,9 @@ class GetDemandasFiltroUseCase(
                         filtroDemandaRepository.getHierarquiaPrefeitura(0)
                             .toMutableList()
 
-                    val list =
-                        demandaRepository.getDemandas(
-                            idRegional = "0",
-                            idPrefeitura = listPrefeituras.first().id,
-                            idAtividadeEtapa = param.filtroInput?.idAtividadeEtapa?.id,
-                            idAtividadeStatus = param.filtroInput?.idAtividadeStatus?.id,
-                            idConvenio = param.filtroInput?.idConvenio?.id,
-                            alarme = param.filtroInput?.alarme,
-                            alerta = param.filtroInput?.alerta,
-                            aviso = param.filtroInput?.aviso,
-                            noPrazo = param.filtroInput?.noPrazo,
-                            numeroDemanda = param.filtroInput?.numeroDemanda
-                        )
+
                     return DemandaState(
-                        list,
+                        emptyList(),
                         TipoAcesso.PREFEITURA,
                         param.filtroInput?.copy(
                             prefeitura = Filtro(
@@ -157,17 +112,9 @@ class GetDemandasFiltroUseCase(
                 }
             } else {
 
-                val list = if (param.filtroInput?.numeroDemanda?.isNotEmpty() == true) {
-                    demandaRepository.getDemandas(
-                        numeroDemanda = param.filtroInput.numeroDemanda
-                    )
-                } else {
-                    emptyList()
-                }
-
 
                 return DemandaState(
-                    list,
+                    emptyList(),
                     TipoAcesso.TOTAL,
                     param.filtroInput,
                     FiltroState(
@@ -175,6 +122,7 @@ class GetDemandasFiltroUseCase(
                         comboConvenio = listConvenio,
                         comboEtapa = listAtividadeEtapa,
                         comboStatus = listAtividadeStatus,
+                        numeroDemandaFiltro = param.filtroInput?.numeroDemanda
                     ),
 
                     )

@@ -3,8 +3,6 @@ package br.com.sp.demandas.ui.login.makeLogin
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,21 +13,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHost
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -40,7 +31,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -59,6 +49,8 @@ import br.com.sp.demandas.design.components.MaxTopAppBarCenter
 import br.com.sp.demandas.design.components.Snackbar
 import br.com.sp.demandas.design.components.SnackbarType
 import br.com.sp.demandas.ui.home.HomeScreen
+import br.com.sp.demandas.ui.login.changePassword.ChangePasswordUI
+import br.com.sp.demandas.ui.login.firstAccess.FirstAccessUI
 import br.com.sp.demandas.ui.login.forgotPassword.ForgotPasswordUI
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -67,7 +59,6 @@ import dev.icerock.moko.biometry.compose.BindBiometryAuthenticatorEffect
 import dev.icerock.moko.biometry.compose.BiometryAuthenticatorFactory
 import dev.icerock.moko.biometry.compose.rememberBiometryAuthenticatorFactory
 import dev.icerock.moko.mvvm.flow.compose.observeAsActions
-import dev.icerock.moko.resources.compose.fontFamilyResource
 import dev.icerock.moko.resources.compose.painterResource
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
@@ -76,7 +67,7 @@ import org.koin.core.parameter.parametersOf
 class LoginScreen : Screen {
 
 
-    @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
         val biometryFactory: BiometryAuthenticatorFactory = rememberBiometryAuthenticatorFactory()
@@ -89,6 +80,7 @@ class LoginScreen : Screen {
         BindBiometryAuthenticatorEffect(viewModel.biometryAuthenticator)
         val snackbarType = remember { mutableStateOf(SnackbarType.INFO) }
         val navigator = LocalNavigator.currentOrThrow
+
 
 
 
@@ -112,12 +104,12 @@ class LoginScreen : Screen {
                     is ServerException -> {
 
                         println(snackbarType)
-                        snackbarType.value = (SnackbarType.ERROR)
+                        snackbarType.value = (SnackbarType.ALERT)
                         scope.launch {
                             scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                             scaffoldState.snackbarHostState.showSnackbar(
                                 it.throwable.message.toString(),
-                                "Erro no servidor",
+                                "",
                                 SnackbarDuration.Indefinite
                             )
                         }
@@ -131,7 +123,7 @@ class LoginScreen : Screen {
                             scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                             scaffoldState.snackbarHostState.showSnackbar(
                                 it.throwable.message.toString(),
-                                "Erro indefinido",
+                                "",
                                 SnackbarDuration.Indefinite
                             )
                         }
@@ -143,8 +135,8 @@ class LoginScreen : Screen {
                         scope.launch {
                             scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                             scaffoldState.snackbarHostState.showSnackbar(
-                                "Atenção",
                                 it.throwable.message.toString(),
+                                "",
                                 SnackbarDuration.Indefinite
                             )
                         }
@@ -156,6 +148,9 @@ class LoginScreen : Screen {
             }
             if (it is LoginScreenContract.Effect.NavigateToHome) {
                 navigator.push(HomeScreen())
+            }
+            if (it is LoginScreenContract.Effect.NavigateToFirstAccess) {
+                navigator.push(FirstAccessUI())
             }
         }
         Scaffold(
@@ -201,7 +196,8 @@ class LoginScreen : Screen {
                     Spacer(Modifier.height(16.dp))
 
                     Column(
-                        Modifier.fillMaxWidth().background(Color.LightGray).padding(vertical = 12.dp)
+                        Modifier.fillMaxWidth().background(Color.LightGray)
+                            .padding(vertical = 12.dp)
                     ) {
                         androidx.compose.material3.Text(
                             text = title,
@@ -239,9 +235,9 @@ class LoginScreen : Screen {
                 //LoginTitleAndSubTitle()
                 LoginField(viewModel)
                 Spacer(Modifier.height(20.dp))
-                /*LoginTextButton {
+                LoginTextButton {
                     navigator.push(ForgotPasswordUI())
-                }*/
+                }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

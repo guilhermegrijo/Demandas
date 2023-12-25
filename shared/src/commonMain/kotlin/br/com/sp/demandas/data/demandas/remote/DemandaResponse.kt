@@ -8,7 +8,7 @@ data class DemandaResponse(
     val idAtividade: Long,
     val idAtividadePai: String?,
     val numero: String?,
-    val portifolio: String?,
+    val portfolio: String?,
     val etapa: String?,
     val etapaCor: String?,
     val situacao: String?,

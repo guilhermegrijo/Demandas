@@ -23,6 +23,13 @@ class ForgotPasswordViewModel(private val forgotPasswordUseCase: ForgotPasswordU
     }
 
     private fun forgotPassword(user: String) {
+
+        if(user.isEmpty()){
+            setEffect { ForgotScreenContract.Effect.ShowSnackbar(Exception("Por favor insira o e-mail")) }
+            setState { ForgotScreenContract.State(stateForgotPassword = ResourceUiState.Error(Exception("Por favor insira o e-mail"))) }
+            return
+        }
+
         setState { copy(stateForgotPassword = ResourceUiState.Loading) }
 
         coroutineScope.launch {

@@ -30,7 +30,7 @@ fun TimelineNode(
     circleParameters: CircleParameters,
     lineParameters: LineParameters? = null,
     contentStartOffset: Dp = 16.dp,
-    spacer: Dp = 32.dp,
+    spacer: Dp = 0.dp,
     content: @Composable BoxScope.(modifier: Modifier) -> Unit
 ) {
     val iconPainter = circleParameters.icon?.let { painterResource(it) }

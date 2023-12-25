@@ -9,3 +9,9 @@ data class ErrorResponse (
     val erro: String?,
     val statusCode: Long?
 )
+
+@Serializable
+data class MensagemRetorno (
+    val statusRetorno : String?,
+    val mensagemRetorno : String?
+)

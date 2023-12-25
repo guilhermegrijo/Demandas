@@ -206,6 +206,7 @@ fun MaxButton(
     text: String,
     backgroundColor: Color = MaterialTheme.colorScheme.inversePrimary,
     enabled: Boolean = true,
+    loading : Boolean = true,
     onClick: () -> Unit
 ) {
     MaxButtonCustom(
@@ -220,7 +221,7 @@ fun MaxButton(
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp),
 
         ) {
-        if (!enabled) CircularProgressIndicator(modifier = Modifier
+        if (!loading) CircularProgressIndicator(modifier = Modifier
             .size(35.dp)
             .padding(5.dp), color = MaterialTheme.colorScheme.onPrimary)
         else

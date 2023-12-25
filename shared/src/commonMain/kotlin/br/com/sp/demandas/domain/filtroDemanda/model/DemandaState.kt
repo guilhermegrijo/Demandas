@@ -26,5 +26,5 @@ data class FiltroState(
     val convenioFiltro: String? = "",
     val numeroDemandaFiltro : String? = "",
     val comboConvenio: List<Filtro> = emptyList(),
-    val filtroSelect : List<String> = emptyList()
+    val filtroSelect : List<String> = listOf("No prazo (sem aviso)","No prazo (com aviso)", "Prazo vencido (alerta e alarme)")
 )

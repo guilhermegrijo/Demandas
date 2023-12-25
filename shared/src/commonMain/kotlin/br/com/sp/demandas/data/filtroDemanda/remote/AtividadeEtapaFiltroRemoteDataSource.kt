@@ -2,6 +2,7 @@ package br.com.sp.demandas.data.filtroDemanda.remote
 
 import br.com.sp.demandas.core.ApiResponse
 import br.com.sp.demandas.core.ErrorResponse
+import br.com.sp.demandas.core.MensagemRetorno
 import br.com.sp.demandas.core.safeRequest
 import br.com.sp.demandas.data.auth.local.AuthCredentials
 import br.com.sp.demandas.domain.filtroDemanda.model.Filtro
@@ -18,7 +19,7 @@ class AtividadeEtapaFiltroRemoteDataSource(
     private val userSettings: AuthCredentials
 ) {
 
-    suspend fun getAtividadeEtapaFiltro(): ApiResponse<List<FiltroResponse>, ErrorResponse> =
+    suspend fun getAtividadeEtapaFiltro(): ApiResponse<List<FiltroResponse>, MensagemRetorno> =
         httpClient.safeRequest {
             url {
                 method = HttpMethod.Get

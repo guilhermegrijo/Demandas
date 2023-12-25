@@ -9,6 +9,7 @@ import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import platform.Foundation.NSUUID
 import platform.UIKit.UIDevice
 
 
@@ -25,5 +26,7 @@ class IosKeyValueStorage : KeyValueStorage {
 }
 
 class IOSPlatform : Platform {
-    override val name: String = UIDevice.currentDevice.systemName()
+    override val name: String = "ios"
+    override fun randomUUID() = NSUUID().UUIDString()
+
 }

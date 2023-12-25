@@ -1,6 +1,7 @@
 package br.com.sp.demandas.ui.mensagens
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -84,7 +85,10 @@ import kotlinx.coroutines.launch
 
 class MensagemUI : Screen {
 
-    @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+    @OptIn(
+        ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
+        ExperimentalFoundationApi::class
+    )
     @Composable
     override fun Content() {
 
@@ -126,7 +130,7 @@ class MensagemUI : Screen {
                             scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                             scaffoldState.snackbarHostState.showSnackbar(
                                 it.throwable.message.toString(),
-                                "Erro no servidor",
+                                "",
                                 SnackbarDuration.Indefinite
                             )
                         }
@@ -254,20 +258,35 @@ class MensagemUI : Screen {
                     is ResourceUiState.Idle -> {}
 
                     is ResourceUiState.Success -> {
-                        LazyColumn(Modifier.fillMaxSize().padding(horizontal = 8.dp)) {
-                            items((state.state as ResourceUiState.Success<List<Mensagem>>).data.filter {
-                                it.atividadeNumero.contains(
+                        val mensagens =
+                            (state.state as ResourceUiState.Success<List<Mensagem>>).data.filter {
+                                it.demanda.contains(
                                     pesquisa.value, ignoreCase = true
                                 )
-                            }) {
-                                CardNotificacao(it) {
-                                    viewModel.handleEvent(
-                                        MensagemScreenContract.Event.GoTo(
-                                            DetalheMensagemUI(it)
+                            }
+                        val header = mensagens.distinctBy { it.dataRegistro.split(" ")[0] }
+                            .map { it.dataRegistro.split(" ")[0] }
+                        println(header)
+
+
+                        LazyColumn(Modifier.fillMaxSize().padding(horizontal = 8.dp)) {
+
+                            header.forEach { header ->
+                                stickyHeader {
+                                    DayHeader(dayString = header)
+                                }
+                                items(mensagens.filter { it.dataRegistro.split(" ")[0] == header }) {
+                                    CardNotificacao(it) {
+                                        viewModel.handleEvent(
+                                            MensagemScreenContract.Event.GoTo(
+                                                DetalheMensagemUI(it)
+                                            )
                                         )
-                                    )
+                                    }
                                 }
                             }
+
+
                         }
                     }
 
@@ -337,7 +356,6 @@ fun AuthorAndTextMessage(
         AuthorNameTimestamp(msg)
 
         ChatItemBubble(message = msg, isUserMe = false, authorClicked = {})
-        DayHeader(dayString = " ")
         Spacer(modifier = Modifier.height(4.dp))
     }
 }
@@ -345,26 +363,20 @@ fun AuthorAndTextMessage(
 @Composable
 private fun AuthorNameTimestamp(msg: Mensagem) {
     // Combine author and timestamp for a11y.
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .semantics(mergeDescendants = true) {}) {
+    Row(modifier = Modifier.semantics(mergeDescendants = true) {}) {
         Text(
-            text = "Demanda: ${msg.atividadeNumero}",
+            text = msg.demanda,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier
-                .paddingFrom(LastBaseline, after = 8.dp) // Space to 1st bubble
-        )
-        Text(
-            text = "Portfólio: ${msg.atividadePortifolio}",
-            style = MaterialTheme.typography.titleSmall,
-            modifier = Modifier
+                .alignBy(LastBaseline)
                 .paddingFrom(LastBaseline, after = 8.dp) // Space to 1st bubble
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "Data: ${msg.dataRegistro}",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface
+            text = msg.dataRegistro.split(" ")[1]+"h",
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.alignBy(LastBaseline),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
@@ -380,14 +392,14 @@ fun ChatItemBubble(
     val colors = MaterialTheme.colorScheme
 
     val backgroundBubbleColor =
-        colors.onBackground
+        Color.LightGray
 
     Column(Modifier.fillMaxWidth()) {
         Surface(
             Modifier.fillMaxWidth(),
             color = backgroundBubbleColor,
             shape = ChatBubbleShape,
-            border = BorderStroke(1.dp, colors.primary)
+            border = BorderStroke(1.dp, Color.LightGray.copy(alpha = 0.4f))
         ) {
             ClickableMessage(
                 message = message,
@@ -401,10 +413,17 @@ fun ChatItemBubble(
 @Composable
 fun DayHeader(dayString: String) {
     Row(
-        modifier = Modifier
+        modifier = Modifier.background(MaterialTheme.colorScheme.background)
             .padding(vertical = 8.dp, horizontal = 16.dp)
             .height(16.dp)
     ) {
+        DayHeaderLine()
+        Text(
+            text = dayString,
+            modifier = Modifier.padding(horizontal = 16.dp),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
         DayHeaderLine()
     }
 }
@@ -429,7 +448,7 @@ fun ClickableMessage(
     Text(
         text = message.mensagem,
         style = MaterialTheme.typography.bodyMedium.copy(color = LocalContentColor.current),
-        color = MaterialTheme.colorScheme.background,
+        color = MaterialTheme.colorScheme.onBackground,
         modifier = Modifier.padding(16.dp),
     )
 }

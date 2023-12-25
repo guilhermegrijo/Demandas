@@ -20,6 +20,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.tasks.await
+import java.util.UUID
 
 @Composable
 fun Application() {
@@ -60,7 +61,8 @@ class AndroidKeyValueStorage(private val context: Context) : KeyValueStorage {
 }
 
 class AndroidPlatform : Platform {
-    override val name: String = "Android"
+    override val name: String = "android"
+    override fun randomUUID(): String = UUID.randomUUID().toString()
 }
 
 class AndroidFCMToken : FcmToken {

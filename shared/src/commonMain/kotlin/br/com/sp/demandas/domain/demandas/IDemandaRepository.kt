@@ -21,6 +21,6 @@ interface IDemandaRepository {
 
     suspend fun getEtapaPlanejada(
         idDemanda: String
-    ): List<EtapaPlanejada>
+    ): EtapaPlanejadaResponsabilidadeDemanda
 
 }

@@ -1,25 +1,30 @@
 import br.com.sp.demandas.core.format
 import br.com.sp.demandas.core.moneyFormat
+import br.com.sp.demandas.data.demandas.remote.AtividadeEtapaPlanejadaResponse
+import br.com.sp.demandas.data.demandas.remote.DatasEtapaResponse
 import br.com.sp.demandas.data.demandas.remote.DemandaDetalheResponse
 import br.com.sp.demandas.data.demandas.remote.DemandaResponse
 import br.com.sp.demandas.data.demandas.remote.EtapaPlanejadaResponse
 import br.com.sp.demandas.data.demandas.remote.EtapaResponse
 import br.com.sp.demandas.data.demandas.remote.EventoResponse
+import br.com.sp.demandas.data.demandas.remote.HistoricoResponse
+import br.com.sp.demandas.data.demandas.remote.ResponsabilidadeResponse
+import br.com.sp.demandas.domain.demandas.DatasEtapa
 import br.com.sp.demandas.domain.demandas.Demanda
 import br.com.sp.demandas.domain.demandas.DemandaDetalhe
 import br.com.sp.demandas.domain.demandas.Etapa
 import br.com.sp.demandas.domain.demandas.EtapaPlanejada
+import br.com.sp.demandas.domain.demandas.EtapaPlanejadaResponsabilidadeDemanda
 import br.com.sp.demandas.domain.demandas.Evento
-import io.fluidsonic.currency.Currency
+import br.com.sp.demandas.domain.demandas.Historico
+import br.com.sp.demandas.domain.demandas.Responsabilidade
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 
-fun DemandaResponse.toDomain() = Demanda(
-    idAtividade.toString(),
+fun DemandaResponse.toDomain() = Demanda(idAtividade.toString(),
     numero.toString(),
-    portifolio.toString(),
+    portfolio.toString(),
     etapa.toString(),
     etapaCor,
     situacao.toString(),
@@ -37,15 +42,13 @@ fun DemandaResponse.toDomain() = Demanda(
     prazoPrevisto ?: " ",
     prazoRealizado ?: " ",
     prazoRestante ?: " ",
-    tipoAlerta?: "",
-    idAlertaClassificacao
-)
+    tipoAlerta ?: "",
+    idAlertaClassificacao)
 
-fun DemandaDetalheResponse.toDomain() = DemandaDetalhe(
-    idAtividade,
+fun DemandaDetalheResponse.toDomain() = DemandaDetalhe(idAtividade,
     idAtividadePai,
     numero,
-    portifolio,
+    portfolio,
     objeto,
     etapa,
     etapaCor,
@@ -60,8 +63,12 @@ fun DemandaDetalheResponse.toDomain() = DemandaDetalhe(
     solicitante,
     if (dataCriacao != null) LocalDateTime.parse(dataCriacao)
         .let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year}" } else "",
-    if (dataUltimaTramitacao != null) LocalDateTime.parse(dataUltimaTramitacao)
-        .let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year} ${it.time}" } else "",
+    dataUltimaTramitacaoHora = if (dataUltimaTramitacao != null) LocalDateTime.parse(
+        dataUltimaTramitacao
+    ).let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year} ${it.time}" } else "",
+    dataUltimaTramitacao = if (dataUltimaTramitacao != null) LocalDateTime.parse(
+        dataUltimaTramitacao
+    ).let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year}" } else "",
     if (valorLiberado != null) moneyFormat(valorLiberado) ?: "" else "",
     if (valorEstado != null) moneyFormat(valorEstado) ?: "" else "",
     if (valorTotal != null) moneyFormat(valorTotal) ?: "" else "",
@@ -70,14 +77,12 @@ fun DemandaDetalheResponse.toDomain() = DemandaDetalhe(
     observacao,
     parcelas = mxlAtividadeMobileDetalhe?.map { it.toParcelas() },
     etapas = etapas?.map { it.toDomain() },
-    eventos = eventos?.map { it.toDomain() }
-)
+    eventos = eventos?.map { it.toDomain() })
 
-fun DemandaDetalheResponse.toParcelas() = DemandaDetalhe(
-    idAtividade,
+fun DemandaDetalheResponse.toParcelas() = DemandaDetalhe(idAtividade,
     idAtividadePai,
     numero,
-    portifolio,
+    portfolio,
     objeto,
     etapa,
     etapaCor,
@@ -92,8 +97,12 @@ fun DemandaDetalheResponse.toParcelas() = DemandaDetalhe(
     solicitante,
     if (dataCriacao != null) LocalDateTime.parse(dataCriacao)
         .let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year}" } else "",
-    if (dataUltimaTramitacao != null) LocalDateTime.parse(dataUltimaTramitacao)
-        .let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year} ${it.time}" } else "",
+    dataUltimaTramitacaoHora = if (dataUltimaTramitacao != null) LocalDateTime.parse(
+        dataUltimaTramitacao
+    ).let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year} ${it.time}" } else "",
+    dataUltimaTramitacao = if (dataUltimaTramitacao != null) LocalDateTime.parse(
+        dataUltimaTramitacao
+    ).let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year}" } else "",
     if (valorLiberado != null) moneyFormat(valorLiberado) ?: "" else "",
     if (valorEstado != null) moneyFormat(valorEstado) ?: "" else "",
     if (valorTotal != null) moneyFormat(valorTotal) ?: "" else "",
@@ -101,8 +110,7 @@ fun DemandaDetalheResponse.toParcelas() = DemandaDetalhe(
     if (valorContrapartida != null) moneyFormat(valorContrapartida) ?: "" else "",
     observacao,
     etapas = etapas?.map { it.toDomain() },
-    eventos = eventos?.map { it.toDomain() }
-)
+    eventos = eventos?.map { it.toDomain() })
 
 
 fun EtapaResponse.toDomain() = Etapa(
@@ -115,8 +123,7 @@ fun EtapaResponse.toDomain() = Etapa(
 )
 
 
-fun EventoResponse.toDomain() = Evento(
-    idAtividade,
+fun EventoResponse.toDomain() = Evento(idAtividade,
     nomeStatus,
     nomeStatusAnterior,
     latitude,
@@ -129,6 +136,8 @@ fun EventoResponse.toDomain() = Evento(
     tecnicoAlocado,
     usuarioAlteracao,
     observacao,
+    etapaNome,
+    etapaCor,
     idAtividadeStatus,
     nome,
     sigla,
@@ -140,15 +149,74 @@ fun EventoResponse.toDomain() = Evento(
     flagExec,
     flagEnc,
     idEmpresa,
-    flagDespacho
-)
+    flagDespacho)
 
-fun EtapaPlanejadaResponse.toDomain() = EtapaPlanejada(
-    etapa,
+fun AtividadeEtapaPlanejadaResponse.toDomain() = EtapaPlanejadaResponsabilidadeDemanda(
+    atividadeEtapaPlanejadaModel.map { it.toDomain() },
+    responsabilidade?.map { it.toDomain() })
+
+fun EtapaPlanejadaResponse.toDomain() = EtapaPlanejada(etapa,
     cor,
-    listaData?.map { data ->
+    icone,
+    listaData.map { data ->
+        if(data != null)
         LocalDateTime.parse(data)
             .let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year} ${it.time}" }
-    } ?: emptyList()
+        else ""
+    },
+    if (dataInicio != null) LocalDateTime.parse(dataInicio)
+        .let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year}" } else "",
+    if (dataFim != null) LocalDateTime.parse(dataFim)
+        .let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year}" } else "",
+    if (dataInicioDiligencia != null) LocalDateTime.parse(dataInicioDiligencia)
+        .let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year} ${it.time}" } else "",
+    if (dataFimDiligencia != null) LocalDateTime.parse(dataFimDiligencia)
+        .let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year} ${it.time}" } else "",
+    diasPrevistos,
+    diasRealizados,
+    diasPrevistosDiligencia,
+    diasRealizadosDiligencia,
+    prazoReal,
+    prazoObjetivo,
+    desvio,
+    historico?.map { it.toDomain() } ?: emptyList(),
+    responsabilidade?.map { it.toDomain() } ?: emptyList(),
+    totalPrazoRealizado,
+    totalPrazoPrevisto,
+    totalPrazoVencido,
+    datasEtapa?.map { it.toDomain() },
+    etapaAtual
+)
 
+fun HistoricoResponse.toDomain() = Historico(etapa,
+    if (dataInicio != null) LocalDateTime.parse(dataInicio)
+        .let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year}" } else "",
+    if (dataFim != null) LocalDateTime.parse(dataFim)
+        .let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year}" } else "",
+    prazoDias,
+    prazoReal,
+    prazoObjetivo,
+    desvio,
+    situacao,
+    situacaoCor,
+    if (dataInicioDiligencia != null) LocalDateTime.parse(dataInicioDiligencia)
+        .let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year} ${it.time}" } else "",
+    if (dataFimDiligencia != null) LocalDateTime.parse(dataFimDiligencia)
+        .let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year} ${it.time}" } else "",
+    prazoDiasDiligencia)
+
+fun ResponsabilidadeResponse.toDomain() = Responsabilidade(
+    nome,
+    etapa,
+    prazoPrevisto.coerceAtLeast(0),
+    prazoRealizado.coerceAtLeast(0),
+    prazoVencido.coerceAtLeast(0)
+)
+
+fun DatasEtapaResponse.toDomain() = DatasEtapa(
+    etapa,
+    if (dataInicio != null) LocalDateTime.parse(dataInicio)
+        .let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year}" } else "",
+    if (dataFim != null) LocalDateTime.parse(dataFim)
+        .let { "${it.dayOfMonth.format()}/${it.monthNumber.format()}/${it.year}" } else "",
 )

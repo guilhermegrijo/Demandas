@@ -17,7 +17,7 @@ kotlin {
     iosSimulatorArm64()
 
     cocoapods {
-        version = "1.0.0"
+        version = "1.1"
         summary = "Some description for the Shared Module"
         homepage = "Link to the Shared Module homepage"
         ios.deploymentTarget = "14.1"
@@ -25,6 +25,9 @@ kotlin {
         framework {
             baseName = "shared"
             isStatic = true
+        }
+        pod("FirebaseCore") {
+            version = "10.7.0"
         }
         extraSpecAttributes["resources"] =
             "['src/commonMain/resources/**', 'src/iosMain/resources/**']"
@@ -57,9 +60,9 @@ kotlin {
                 api("dev.icerock.moko:mvvm-livedata-compose:0.16.1") // api mvvm-livedata, binding extensions for Compose Multiplatfrom
                 implementation("io.insert-koin:koin-core:3.4.3")
                 implementation("io.insert-koin:koin-compose:1.0.4")
-                implementation("cafe.adriel.voyager:voyager-navigator:1.0.0-rc05")
-                implementation("cafe.adriel.voyager:voyager-tab-navigator:1.0.0-rc05")
-                implementation("cafe.adriel.voyager:voyager-transitions:1.0.0-rc05")
+                implementation("cafe.adriel.voyager:voyager-navigator:1.0.0-rc08")
+                implementation("cafe.adriel.voyager:voyager-tab-navigator:1.0.0-rc08")
+                implementation("cafe.adriel.voyager:voyager-transitions:1.0.0-rc08")
                 implementation("com.liftric:kvault:1.10.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
                 implementation("dev.icerock.moko:biometry:0.4.0")
@@ -95,7 +98,6 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
-
             dependencies {
                 implementation("io.ktor:ktor-client-darwin:2.3.1")
             }

@@ -125,8 +125,6 @@ class DemandasUI : Screen {
 
         val scope = rememberCoroutineScope()
 
-        var hasOpen by remember { mutableStateOf(false) }
-
         val viewModel = getScreenModel<DemandaViewModel>()
         val snackbarType = remember { mutableStateOf(SnackbarType.INFO) }
         val navigator = LocalNavigator.currentOrThrow
@@ -166,7 +164,7 @@ class DemandasUI : Screen {
                             scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                             scaffoldState.snackbarHostState.showSnackbar(
                                 it.throwable.message.toString(),
-                                "Erro no servidor",
+                                "",
                                 SnackbarDuration.Indefinite
                             )
                         }
@@ -208,12 +206,12 @@ class DemandasUI : Screen {
         }
 
         LaunchedEffect(true) {
-            if (!hasOpen)
+            if (!viewModel.hasOpen)
                 scope.launch {
                     modalBottomSheetState.apply {
                         show()
                     }
-                    hasOpen = true
+                    viewModel.hasOpen = true
                     print(navigator.lastEvent)
 
                 }
@@ -514,28 +512,6 @@ class DemandasUI : Screen {
                                                 textAlign = TextAlign.Start,
                                                 modifier = Modifier.fillMaxWidth()
                                             )
-
-
-                                            androidx.compose.material3.Text(
-                                                text = buildAnnotatedString {
-                                                    withStyle(
-                                                        style = SpanStyle(
-                                                            color = MaterialTheme.colorScheme.onBackground,
-                                                            fontWeight = FontWeight.SemiBold
-                                                        )
-                                                    ) {
-                                                        append("Portfólio: ")
-                                                    }
-
-                                                    append(it.portfolio)
-
-                                                },
-                                                textAlign = TextAlign.Start,
-                                                style = MaterialTheme.typography.bodyMedium.copy(
-                                                    color = MaterialTheme.colorScheme.onBackground,
-                                                    fontWeight = FontWeight.Normal
-                                                ),
-                                            )
                                             androidx.compose.material3.Text(
                                                 text = it.tipoAlerta,
                                                 textAlign = TextAlign.Start,
@@ -695,7 +671,7 @@ fun SegmentButton(
                     else -> Modifier.offset((-1 * index).dp, 0.dp)
                         .zIndex(if (selectedIndexes.contains(item)) 1f else 0f)
 
-                }.height(56.dp).weight(1f / itemsList.size),
+                }.height(100.dp).weight(1f / itemsList.size),
                 shape = when (index) {
                     0 -> RoundedCornerShape(
                         topStart = cornerRadius,
@@ -704,17 +680,10 @@ fun SegmentButton(
                         bottomEnd = 0.dp
                     )
 
-                    1 -> RoundedCornerShape(
+                    itemsList.size -1 -> RoundedCornerShape(
                         topStart = 0.dp,
                         topEnd = cornerRadius,
                         bottomStart = 0.dp,
-                        bottomEnd = cornerRadius
-                    )
-
-                    3 -> RoundedCornerShape(
-                        topStart = cornerRadius,
-                        topEnd = cornerRadius,
-                        bottomStart = cornerRadius,
                         bottomEnd = cornerRadius
                     )
 

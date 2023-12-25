@@ -2,28 +2,6 @@ import SwiftUI
 import shared
 import Firebase
 
-class Singleton {
-
-    private var fcmToken : String = ""
-
-    static var shared: Singleton = {
-        let instance = Singleton()
-        // ... configure the instance
-        // ...
-        return instance
-    }()
-
-    private init() {}
-
-
-    func setToken(token : String?) {
-        fcmToken = token ?? ""
-    }
-    func getToken() -> String {
-        return fcmToken
-    }
-}
-
 @main
 struct iOSApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
@@ -46,7 +24,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         
         FirebaseApp.configure()
         
+        
         Messaging.messaging().delegate = self
+        
         
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().delegate = self

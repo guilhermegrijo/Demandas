@@ -32,7 +32,7 @@ class CheckCodeViewModel(private val checkCodeUseCase: CheckCodeUseCase, private
                     setEffect { CheckCodeContract.Effect.ShowSnackbar(it) }
                     setState { copy(state = ResourceUiState.Error(it)) }
                 }.onSuccess {
-                    setEffect { CheckCodeContract.Effect.NavigateToNewPassword(user) }
+                    setEffect { CheckCodeContract.Effect.NavigateToNewPassword(user, it.mensagemRetorno ?: "") }
                 }
         }
     }
@@ -49,6 +49,6 @@ interface CheckCodeContract {
 
     sealed interface Effect : UiEffect {
         data class ShowSnackbar(val throwable: Throwable) : Effect
-        data class NavigateToNewPassword(val user: String) : Effect
+        data class NavigateToNewPassword(val user: String, val code : String) : Effect
     }
 }

@@ -12,6 +12,7 @@ import br.com.sp.demandas.domain.auth.model.LoginModel
 import br.com.sp.demandas.domain.auth.DoLoginUseCase
 import br.com.sp.demandas.domain.auth.RefreshTokenUseCase
 import br.com.sp.demandas.domain.auth.UpdateUserUseCase
+import br.com.sp.demandas.domain.mensagem.GetMensagensUseCase
 import br.com.sp.demandas.domain.user.GetUserUseCase
 import br.com.sp.demandas.domain.user.User
 import cafe.adriel.voyager.core.model.coroutineScope
@@ -25,7 +26,8 @@ class LoginViewModel(
     private val getUserUseCase: GetUserUseCase,
     private val updateUserUseCase: UpdateUserUseCase,
     private val refreshTokenUseCase: RefreshTokenUseCase,
-    private val platform: Platform
+    private val platform: Platform,
+    private val getMensagensUseCase: GetMensagensUseCase
 ) : BaseViewModel<LoginScreenContract.Event, LoginScreenContract.State, LoginScreenContract.Effect>() {
 
 
@@ -64,23 +66,41 @@ class LoginViewModel(
     }
 
     private fun doLogin(user: String, password: String) {
+
+        if(user.isEmpty() || password.isEmpty()){
+            setState { copy(stateLogin = ResourceUiState.Idle) }
+            setEffect { LoginScreenContract.Effect.ShowSnackbar(Exception("Por favor preencha as credenciais de login")) }
+            setState { copy(stateLogin = ResourceUiState.Error(Exception("Por favor preencha as credenciais de login"))) }
+        return
+        }
+
         coroutineScope.launch {
             doLoginUseCase.invoke(LoginModel(user, password, true)).onFailure {
                 setState { copy(stateLogin = ResourceUiState.Idle) }
                 setEffect { LoginScreenContract.Effect.ShowSnackbar(it) }
                 setState { copy(stateLogin = ResourceUiState.Error(it)) }
             }.onSuccess {
-                setState { copy(stateLogin = ResourceUiState.Idle) }
-                updateUserUseCase.invoke(it.copy(flagPrimeiroAcesso = false))
-                /*if (biometryAuthenticator.isBiometricAvailable() && UserState.value.flagPrimeiroAcesso) {
-                    if (platform.name.contains(
-                            "IOS",
-                            ignoreCase = true
-                        )
-                    ) setEffect { LoginScreenContract.Effect.ShowDialog }
-                    else askEnrollment()
-                } else */setEffect { LoginScreenContract.Effect.NavigateToHome }
-
+                getMensagensUseCase.invoke(Unit).onFailure {
+                    setState { copy(stateLogin = ResourceUiState.Idle) }
+                    setEffect { LoginScreenContract.Effect.ShowSnackbar(it) }
+                    setState { copy(stateLogin = ResourceUiState.Error(it)) }
+                }.onSuccess { _ ->
+                    setState { copy(stateLogin = ResourceUiState.Idle) }
+                    if (it.flagPrimeiroAcesso) {
+                        setEffect { LoginScreenContract.Effect.NavigateToFirstAccess }
+                    } else {
+                        setEffect { LoginScreenContract.Effect.NavigateToHome }
+                    }
+                    updateUserUseCase.invoke(it.copy(flagPrimeiroAcesso = false))
+                    /*if (biometryAuthenticator.isBiometricAvailable() && UserState.value.flagPrimeiroAcesso) {
+                        if (platform.name.contains(
+                                "IOS",
+                                ignoreCase = true
+                            )
+                        ) setEffect { LoginScreenContract.Effect.ShowDialog }
+                        else askEnrollment()
+                    } else */
+                }
             }
         }
     }
@@ -199,6 +219,7 @@ interface LoginScreenContract {
 
     sealed interface Effect : UiEffect {
         data object NavigateToHome : Effect
+        data object NavigateToFirstAccess : Effect
         data class ShowSnackbar(val throwable: Throwable) : Effect
         data object ShowDialog : Effect
     }

@@ -66,6 +66,7 @@ import br.com.sp.demandas.design.components.AutoComplete
 import br.com.sp.demandas.design.components.MaxButton
 import br.com.sp.demandas.design.components.MaxTopAppBarLeftTitle
 import br.com.sp.demandas.design.components.ShimmerPreview
+import br.com.sp.demandas.domain.filtroDemanda.model.DemandaState
 import br.com.sp.demandas.domain.filtroDemanda.model.Filtro
 import br.com.sp.demandas.domain.filtroDemanda.model.FiltroState
 import br.com.sp.demandas.domain.filtroDemanda.model.TipoAcesso
@@ -151,6 +152,7 @@ fun FilterBottomSheet(
                             Color.Black, RoundedCornerShape(
                                 topEnd = 16.dp,
                                 bottomEnd = 16.dp
+                                bottomEnd = 16.dp
                             )
                         ),
                         painter = painterResource(logo),
@@ -209,7 +211,8 @@ fun FilterBottomSheet(
                             mutableStateOf(uiState.filtroState.numeroDemandaFiltro ?: "")
                         }
 
-                        if ((uiState.state as ResourceUiState.Success).data.tipoAcesso == TipoAcesso.TOTAL)
+                        if ((uiState.state as ResourceUiState.Success).data.tipoAcesso == TipoAcesso.TOTAL) {
+
                             AutoComplete(
                                 titulo = "Regional",
                                 filtro = uiState.filtroState.regionalFiltro ?: "",
@@ -217,6 +220,52 @@ fun FilterBottomSheet(
                             ) {
                                 viewModel.handleEvent(DemandaScreenContract.Event.FiltroRegional(it))
                             }
+
+                            if(uiState.filtroState.regionalFiltro == "")
+                            Column(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                                    .fillMaxWidth()
+                            ) {
+
+                                androidx.compose.material3.Text(
+                                    modifier = Modifier.padding(start = 3.dp, bottom = 2.dp),
+                                    text = "Número da Demanda",
+                                    fontSize = 16.sp,
+                                )
+
+                                Column(modifier = Modifier.fillMaxWidth()) {
+
+                                    Row(modifier = Modifier.fillMaxWidth()) {
+                                        OutlinedTextField(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(55.dp),
+                                            value = numeroDemanda,
+                                            onValueChange = {
+                                                numeroDemanda = it
+                                                viewModel.handleEvent(
+                                                    DemandaScreenContract.Event.FiltroNumeroDemanda(
+                                                        it
+                                                    )
+                                                )
+                                            },
+                                            colors = TextFieldDefaults.colors(
+                                                focusedContainerColor = Color.Transparent,
+                                                unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                                                disabledContainerColor = MaterialTheme.colorScheme.background,
+                                            ),
+                                            keyboardOptions = KeyboardOptions(
+                                                keyboardType = KeyboardType.Text,
+                                                imeAction = ImeAction.Done
+                                            ),
+                                            shape = RoundedCornerShape(8.dp),
+                                            singleLine = true,
+                                        )
+                                    }
+                                }
+                            }
+                        }
                         else if ((uiState.state as ResourceUiState.Success).data.tipoAcesso == TipoAcesso.REGIONAL)
                             Column(
                                 modifier = Modifier
@@ -313,6 +362,7 @@ fun FilterBottomSheet(
                                     }
                                 }
                             }
+                            if ((uiState.state as ResourceUiState.Success).data.tipoAcesso == TipoAcesso.PREFEITURA || (uiState.state as ResourceUiState.Success).data.tipoAcesso == TipoAcesso.REGIONAL)
                             Column(
                                 modifier = Modifier
                                     .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -384,9 +434,9 @@ fun FilterBottomSheet(
                             }
 
                             val itemsList =
-                                listOf("No prazo (Avisos)", "Prazo vencido (alerta e alarme)")
+                                listOf("No prazo (sem aviso)","No prazo (com aviso)", "Prazo vencido (alerta e alarme)")
 
-                            SegmentButton(
+  /*                          SegmentButton(
                                 modifier = Modifier.padding(all = 16.dp).fillMaxWidth(),
                                 itemsList = itemsList,
                                 selectedIndexes = selectedIndexes
@@ -410,11 +460,11 @@ fun FilterBottomSheet(
                                         selectedIndexes
                                     )
                                 )
-                            }
+                            }*/
 
                         }
 
-                        if (uiState.filtroState.prefeituraFiltro?.isNotEmpty() == true || numeroDemanda.isNotEmpty()) {
+                        if (uiState.filtroState.regionalFiltro?.isNotEmpty() == true || numeroDemanda.isNotEmpty() || (uiState.state as ResourceUiState.Success<DemandaState>).data.tipoAcesso != TipoAcesso.TOTAL) {
                             MaxButton(
                                 modifier = Modifier.fillMaxWidth(0.9f).height(50.dp),
                                 text = "Filtrar",

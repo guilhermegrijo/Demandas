@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ScaffoldState
@@ -41,7 +42,6 @@ import br.com.sp.demandas.core.ServerException
 import br.com.sp.demandas.core.UnknownException
 import br.com.sp.demandas.core.ui.ResourceUiState
 import br.com.sp.demandas.core.ui.getScreenModel
-import br.com.sp.demandas.design.components.CustomDialog
 import br.com.sp.demandas.design.components.Snackbar
 import br.com.sp.demandas.design.components.SnackbarType
 import br.com.sp.demandas.ui.login.checkCode.CheckCodeUI
@@ -87,7 +87,7 @@ class ForgotPasswordUI : Screen {
                         scope.launch {
                             scaffoldState.snackbarHostState.showSnackbar(
                                 it.throwable.message.toString(),
-                                "Erro no servidor",
+                                "Erro",
                                 SnackbarDuration.Indefinite
                             )
                         }
@@ -115,7 +115,7 @@ class ForgotPasswordUI : Screen {
         Scaffold(
             topBar = {
                 EsqueceuSenhaTopAppBar {
-                    navigator.pop()
+                    navigator.popUntilRoot()
                 }
             },
             snackbarHost = {
@@ -148,7 +148,7 @@ class ForgotPasswordUI : Screen {
                 val logo = if (isSystemInDarkTheme()) MR.images.sp_mini else MR.images.sp_mini
 
                 Image(
-                    modifier = Modifier.fillMaxWidth(0.7f),
+                    modifier = Modifier.size(100.dp),
                     painter = painterResource(logo),
                     contentDescription = "Localized_Logo"
                 )
@@ -179,6 +179,7 @@ fun EsqueceuSenhaField(viewModel: ForgotPasswordViewModel) {
 
     Spacer(Modifier.height(35.dp))
     ButtonAction(
+        enabled = state.stateForgotPassword !is ResourceUiState.Loading,
         onClick = {
             viewModel.setEvent(ForgotScreenContract.Event.SendEmail(user.value))
             keyboardController?.hide()

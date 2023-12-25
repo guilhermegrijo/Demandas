@@ -36,6 +36,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -119,7 +120,7 @@ class DetalheMensagemUI(private val mensagem: Mensagem) : Screen {
             ) {
 
                 Text(
-                    text = "Demanda: ${mensagem.atividadeNumero}",
+                    text = "Demanda: ${mensagem.demanda}",
                     textAlign = TextAlign.Start,
                     modifier = Modifier.padding(8.dp),
                     style = MaterialTheme.typography.headlineSmall.copy(
@@ -130,12 +131,13 @@ class DetalheMensagemUI(private val mensagem: Mensagem) : Screen {
 
                 LazyColumn(
                     modifier = Modifier
-                        .background(MaterialTheme.colorScheme.background).padding(24.dp
+                        .background(MaterialTheme.colorScheme.background).padding(
+                            24.dp
                         ).fillMaxWidth(1f),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top,
                 ) {
-                    item{
+                    item {
                         Text(
                             text = buildAnnotatedString {
                                 withStyle(
@@ -178,9 +180,15 @@ class DetalheMensagemUI(private val mensagem: Mensagem) : Screen {
                                 withStyle(
                                     style = SpanStyle(
                                         fontWeight = FontWeight.Normal,
+                                        color = Color(
+                                            mensagem.etapaCor?.removePrefix(
+                                                "#"
+                                            )?.toLong(16)?.or(0x00000000FF000000)
+                                                ?: 0xFFFFFFF
+                                        ),
                                     )
                                 ) {
-                                    append(mensagem.alertaClassificacao)
+                                    append(mensagem.status)
                                 }
 
 

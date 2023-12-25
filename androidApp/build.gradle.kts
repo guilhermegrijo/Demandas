@@ -11,8 +11,8 @@ android {
         applicationId = "br.com.sp.demandas.android"
         minSdk = 24
         targetSdk = 34
-        versionCode = 5
-        versionName = "1.0"
+        versionCode = 15
+        versionName = "1.27"
     }
     buildFeatures {
         compose = true

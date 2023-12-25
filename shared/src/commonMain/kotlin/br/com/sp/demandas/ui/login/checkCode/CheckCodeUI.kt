@@ -1,6 +1,5 @@
 package br.com.sp.demandas.ui.login.checkCode
 
-import ForgotPasswordViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,16 +20,13 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -59,7 +56,8 @@ import br.com.sp.demandas.design.components.MaxButton
 import br.com.sp.demandas.design.components.MaxColumn
 import br.com.sp.demandas.design.components.Snackbar
 import br.com.sp.demandas.design.components.SnackbarType
-import br.com.sp.demandas.ui.login.forgotPassword.EsqueceuSenhaTopAppBar
+import br.com.sp.demandas.ui.login.changePassword.ChangePasswordUI
+import br.com.sp.demandas.ui.login.changePassword.EsqueceuSenhaTopAppBar
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -109,7 +107,7 @@ data class CheckCodeUI(val user: String) : Screen {
                         scope.launch {
                             scaffoldState.snackbarHostState.showSnackbar(
                                 it.throwable.message.toString(),
-                                "Erro no servidor",
+                                "",
                                 SnackbarDuration.Indefinite
                             )
                         }
@@ -130,7 +128,7 @@ data class CheckCodeUI(val user: String) : Screen {
                 }
             }
             if (it is CheckCodeContract.Effect.NavigateToNewPassword) {
-                navigator.push(CheckCodeUI(it.user))
+                navigator.push(ChangePasswordUI(it.user, it.code))
             }
         }
 
@@ -138,7 +136,7 @@ data class CheckCodeUI(val user: String) : Screen {
             scaffoldState = scaffoldState,
             topBar = {
                 EsqueceuSenhaTopAppBar {
-                    navigator.pop()
+                    navigator.popUntilRoot()
                 }
             },
             snackbarHost = {
@@ -164,14 +162,15 @@ data class CheckCodeUI(val user: String) : Screen {
                         color = MaterialTheme.colorScheme.onBackground
                     )
                 )
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(8.dp))
                 Text(
                     text = "insira o código recebido para o usuário $user",
-                    style = MaterialTheme.typography.bodySmall.copy(
+                    style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.Normal,
-                        textAlign = TextAlign.Start,
+                        textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.onBackground
-                    )
+                    ),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
                 )
                 Spacer(Modifier.height(32.dp))
                 OtpField(otpValue = otpValue)
@@ -195,7 +194,7 @@ data class CheckCodeUI(val user: String) : Screen {
                 val logo = if (isSystemInDarkTheme()) MR.images.sp_mini else MR.images.sp_mini
 
                 Image(
-                    modifier = Modifier.fillMaxWidth(0.7f),
+                    modifier = Modifier.size(100.dp),
                     painter = painterResource(logo),
                     contentDescription = "Localized_Logo"
                 )
@@ -209,6 +208,11 @@ data class CheckCodeUI(val user: String) : Screen {
         otpCount: Int = 5,
         otpValue: MutableState<String>,
     ) {
+
+
+
+
+
         val focusRequester = remember { FocusRequester() }
 
         LaunchedEffect(Unit) {

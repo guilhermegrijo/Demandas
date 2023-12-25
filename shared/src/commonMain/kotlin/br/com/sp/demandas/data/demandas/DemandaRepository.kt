@@ -7,6 +7,7 @@ import br.com.sp.demandas.data.demandas.remote.DemandaRemoteSource
 import br.com.sp.demandas.domain.demandas.Demanda
 import br.com.sp.demandas.domain.demandas.DemandaDetalhe
 import br.com.sp.demandas.domain.demandas.EtapaPlanejada
+import br.com.sp.demandas.domain.demandas.EtapaPlanejadaResponsabilidadeDemanda
 import br.com.sp.demandas.domain.demandas.IDemandaRepository
 import toDomain
 
@@ -42,7 +43,7 @@ internal class DemandaRepository(private val demandaRemoteSource: DemandaRemoteS
             }
 
             is ApiResponse.Error.HttpError -> {
-                throw ServerException("${result.errorMessage}")
+                throw ServerException("${result.errorBody.mensagemRetorno}")
             }
 
             is ApiResponse.Error.SerializationError -> {
@@ -64,8 +65,7 @@ internal class DemandaRepository(private val demandaRemoteSource: DemandaRemoteS
             }
 
             is ApiResponse.Error.HttpError -> {
-                throw ServerException("${result.errorMessage}")
-            }
+                throw ServerException("${result.errorBody.mensagemRetorno}")            }
 
             is ApiResponse.Error.SerializationError -> {
                 throw ClientException("${result.errorMessage}")
@@ -78,22 +78,21 @@ internal class DemandaRepository(private val demandaRemoteSource: DemandaRemoteS
         }
     }
 
-    override suspend fun getEtapaPlanejada(idDemanda: String): List<EtapaPlanejada> {
+    override suspend fun getEtapaPlanejada(idDemanda: String): EtapaPlanejadaResponsabilidadeDemanda {
         when (val result = demandaRemoteSource.getEtapaPlanejada(idDemanda)) {
             is ApiResponse.Error.GenericError -> {
                 throw ClientException("${result.errorMessage}")
             }
 
             is ApiResponse.Error.HttpError -> {
-                throw ServerException("${result.errorMessage}")
-            }
+                throw ServerException("${result.errorBody.mensagemRetorno}")            }
 
             is ApiResponse.Error.SerializationError -> {
                 throw ClientException("${result.errorMessage}")
             }
 
             is ApiResponse.Success -> {
-                return result.body.map { it.toDomain() }
+                return result.body.toDomain()
 
             }
         }

@@ -34,7 +34,7 @@ val networkModule = module {
                 )
             }
             defaultRequest {
-                url("https://convenioapi-hml.azurewebsites.net/api")
+                url("https://convenioapi.azurewebsites.net/api")
             }
             install(Logging) {
                 logger = Logger.DEFAULT

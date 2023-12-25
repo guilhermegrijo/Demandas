@@ -9,7 +9,7 @@ fun EsqueceuSenhaTopAppBar(
 ){
     MaxTopAppBarNavigation(
         onBackClick = onVoltarEvent,
-        title = "Recuperar senha",
+        title = "Trocar Senha",
     )
 
 }

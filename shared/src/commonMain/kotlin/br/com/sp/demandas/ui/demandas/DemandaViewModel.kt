@@ -1,26 +1,34 @@
 package br.com.sp.demandas.ui.demandas
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import br.com.sp.demandas.core.ui.BaseViewModel
 import br.com.sp.demandas.core.ui.ResourceUiState
 import br.com.sp.demandas.core.ui.UiEffect
 import br.com.sp.demandas.core.ui.UiEvent
 import br.com.sp.demandas.core.ui.UiState
+import br.com.sp.demandas.domain.filtroDemanda.FiltroDemandasUseCase
 import br.com.sp.demandas.domain.filtroDemanda.GetDemandasFiltroUseCase
 import br.com.sp.demandas.domain.filtroDemanda.model.DemandaState
 import br.com.sp.demandas.domain.filtroDemanda.model.Filtro
 import br.com.sp.demandas.domain.filtroDemanda.model.FiltroState
-import br.com.sp.demandas.ui.login.checkCode.CheckCodeUI
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.launch
 
 class DemandaViewModel(
     private val getDemandasUseCase: GetDemandasFiltroUseCase,
+    private val filtroDemandasUseCase: FiltroDemandasUseCase
 ) :
     BaseViewModel<DemandaScreenContract.Event, DemandaScreenContract.State, DemandaScreenContract.Effect>() {
 
+
+    var hasOpen by mutableStateOf(false)
+
+
     init {
         val filtro = DemandaState()
-        getDemandas(filtro)
+        getFiltro(filtro)
     }
 
     override fun createInitialState(): DemandaScreenContract.State =
@@ -51,8 +59,9 @@ class DemandaViewModel(
                         )
                     )
                 }
+
                 newState = newState.copy(
-                    filtroInput = newState.filtroInput?.copy(regional = event.filtro),
+                    filtroInput = newState.filtroInput?.copy(regional = if (event.filtro.id == "") null else event.filtro),
                     filtroState = newState.filtroState?.copy(regionalFiltro = event.filtro.texto)
                 )
 
@@ -62,7 +71,8 @@ class DemandaViewModel(
                         filtroState = newState.filtroState!!
                     )
                 }
-                getDemandas(newState)
+
+                getFiltro(newState)
             }
 
             is DemandaScreenContract.Event.FiltroPrefeitura -> {
@@ -187,10 +197,9 @@ class DemandaViewModel(
                 newState = newState.copy(
                     filtroInput = newState.filtroInput?.copy(
                         alarme = event.list.contains("Prazo vencido (alerta e alarme)"),
-                        aviso = event.list.contains("No prazo (Avisos)"),
+                        aviso = event.list.contains("No prazo (com aviso)"),
                         alerta = event.list.contains("Prazo vencido (alerta e alarme)"),
-                        noPrazo = event.list.contains("No prazo (Avisos)")
-
+                        noPrazo = event.list.contains("No prazo (sem aviso)")
                     ),
                     filtroState = newState.filtroState?.copy(filtroSelect = event.list)
                 )
@@ -204,7 +213,7 @@ class DemandaViewModel(
 
             is DemandaScreenContract.Event.FiltrarDemanda -> {
                 var newState = (uiState.value.state as ResourceUiState.Success).data
-                getDemandas(newState)
+                getDemanda(newState)
             }
 
             is DemandaScreenContract.Event.NavigateToDetail -> {
@@ -213,8 +222,8 @@ class DemandaViewModel(
         }
     }
 
-    private fun getDemandas(demandaFIltroInput: DemandaState) {
-        coroutineScope.launch {
+    private fun getFiltro(demandaFIltroInput: DemandaState) {
+        screenModelScope.launch {
             setState {
                 copy(
                     state = ResourceUiState.Loading
@@ -229,12 +238,48 @@ class DemandaViewModel(
                     )
                 }
             }.onSuccess {
+                    setState {
+                        copy(
+                            state = ResourceUiState.Success(it),
+                            filtroState = it.filtroState!!
+                        )
+                    }
+            }
+        }
+
+    }
+
+    private fun getDemanda(demandaFIltroInput: DemandaState) {
+        screenModelScope.launch {
+            setState {
+                copy(
+                    state = ResourceUiState.Loading
+                )
+            }
+            filtroDemandasUseCase.invoke(demandaFIltroInput).onFailure {
+                println(it)
+                setEffect { DemandaScreenContract.Effect.ShowSnackbar(it) }
                 setState {
                     copy(
-                        state = ResourceUiState.Success(it),
-                        filtroState = it.filtroState!!
+                        state = ResourceUiState.Success(DemandaState())
                     )
                 }
+            }.onSuccess {
+
+                if (it.filtroState?.regionalFiltro?.isEmpty() == true && it.lista?.size == 1) {
+                    setEffect { DemandaScreenContract.Effect.NavigateToDetail(it.lista.first().idAtividade) }
+                    setState {
+                        copy(
+                            state = ResourceUiState.Success(it), filtroState = it.filtroState!!
+                        )
+                    }
+                } else
+                    setState {
+                        copy(
+                            state = ResourceUiState.Success(it),
+                            filtroState = it.filtroState!!
+                        )
+                    }
             }
         }
 

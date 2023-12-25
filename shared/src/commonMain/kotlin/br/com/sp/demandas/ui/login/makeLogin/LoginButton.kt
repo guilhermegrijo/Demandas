@@ -27,6 +27,7 @@ fun LoginButton(
         MaxButton(
             modifier = modifier.fillMaxWidth().height(50.dp),
             text = "Entrar",
+            loading = enabled,
             enabled = enabled,
             onClick = onClick
         )

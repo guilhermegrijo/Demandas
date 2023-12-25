@@ -22,5 +22,5 @@ val repositoryModule = module {
     factory { AuthCredentials(get()) }
 
     factory<IFiltroDemandaRepository> { FiltroDemandaRepository(get(), get(), get(), get(),get()) }
-    factory<IMensagemRepository> { MensagemRepository(get(), get())}
+    single<IMensagemRepository> { MensagemRepository(get(), get(), get())}
 }
